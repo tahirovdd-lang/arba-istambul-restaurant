@@ -1,12 +1,8 @@
-# bot.py — Aiogram 3 / BotHost / GitHub Pages WebApp
-# Все настройки берутся из переменных окружения на BotHost.
-
 import asyncio
 import logging
 import json
 import os
 import time
-from typing import List
 
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import CommandStart, Command
@@ -18,25 +14,23 @@ from aiogram.types import (
 
 logging.basicConfig(level=logging.INFO)
 
-# ====== ENV (BotHost) ======
+# ====== НАСТРОЙКИ ======
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 if not BOT_TOKEN:
-    raise RuntimeError("❌ BOT_TOKEN не найден. Добавь переменную окружения BOT_TOKEN на BotHost.")
+    raise RuntimeError("❌ BOT_TOKEN не найден. Добавь переменную окружения BOT_TOKEN.")
 
+# ✅ поменяй на username твоего бота (без @)
 BOT_USERNAME = os.getenv("BOT_USERNAME", "arba_istambul_bot").replace("@", "")
+
+# ✅ твой Telegram ID (админ)
 ADMIN_ID = int(os.getenv("ADMIN_ID", "6013591658"))
+
+# ✅ канал ресторана (если нужен пост с кнопкой)
 CHANNEL_ID = os.getenv("CHANNEL_ID", "@ARBA_ISTAMBUL_RESTAURANT")
 
-# ✅ WebApp GitHub Pages
+# ✅ GitHub Pages WebApp (замени на свой репозиторий)
 WEBAPP_URL = os.getenv("WEBAPP_URL", "https://tahirovdd-lang.github.io/arba-istambul-restaurant/?v=1")
 
-# ✅ Название ресторана
-REST_NAME = os.getenv("REST_NAME", "ARBA ISTAMBUL RESTAURANT")
-
-# ✅ Текст кнопки
-BTN_OPEN_MULTI = os.getenv("BTN_OPEN_MULTI", "Ochish • Открыть • Open")
-
-# ====== BOT INIT ======
 bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
 dp = Dispatcher()
 
@@ -52,15 +46,15 @@ def allow_start(user_id: int, ttl: float = 2.0) -> bool:
     return True
 
 # ====== КНОПКИ ======
+BTN_OPEN_MULTI = "Ochish • Открыть • Open"
+
 def kb_webapp_reply() -> ReplyKeyboardMarkup:
-    # ✅ ReplyKeyboard с web_app
     return ReplyKeyboardMarkup(
         keyboard=[[KeyboardButton(text=BTN_OPEN_MULTI, web_app=WebAppInfo(url=WEBAPP_URL))]],
         resize_keyboard=True
     )
 
 def kb_channel_deeplink() -> InlineKeyboardMarkup:
-    # ✅ Синяя кнопка в канале (deeplink на бота -> startapp)
     deeplink = f"https://t.me/{BOT_USERNAME}?startapp=menu"
     return InlineKeyboardMarkup(
         inline_keyboard=[[InlineKeyboardButton(text=BTN_OPEN_MULTI, url=deeplink)]]
@@ -69,11 +63,11 @@ def kb_channel_deeplink() -> InlineKeyboardMarkup:
 # ====== ТЕКСТ ======
 def welcome_text() -> str:
     return (
-        f"🇷🇺 Добро пожаловать в <b>{REST_NAME}</b>! 👋 "
+        "🇷🇺 Добро пожаловать в <b>ARBA ISTAMBUL RESTAURANT</b>! 👋 "
         "Выберите блюда и оформите заказ — нажмите «Открыть» ниже.\n\n"
-        f"🇺🇿 <b>{REST_NAME}</b> ga xush kelibsiz! 👋 "
+        "🇺🇿 <b>ARBA ISTAMBUL RESTAURANT</b> ga xush kelibsiz! 👋 "
         "Taomlarni tanlang va buyurtma bering — pastdagi «Ochish» tugmasini bosing.\n\n"
-        f"🇬🇧 Welcome to <b>{REST_NAME}</b>! 👋 "
+        "🇬🇧 Welcome to <b>ARBA ISTAMBUL RESTAURANT</b>! 👋 "
         "Choose dishes and place an order — tap “Open” below."
     )
 
@@ -84,23 +78,22 @@ async def start(message: types.Message):
         return
     await message.answer(welcome_text(), reply_markup=kb_webapp_reply())
 
-# Иногда на BotHost удобно дергать командой /startapp
 @dp.message(Command("startapp"))
 async def startapp(message: types.Message):
     if not allow_start(message.from_user.id):
         return
     await message.answer(welcome_text(), reply_markup=kb_webapp_reply())
 
-# ====== ПОСТ В КАНАЛ + ЗАКРЕП ======
+# ====== ПОСТ В КАНАЛ ======
 @dp.message(Command("post_menu"))
 async def post_menu(message: types.Message):
     if message.from_user.id != ADMIN_ID:
         return await message.answer("⛔️ Нет доступа.")
 
     text = (
-        f"🇷🇺 <b>{REST_NAME}</b>\nНажмите кнопку ниже, чтобы открыть меню.\n\n"
-        f"🇺🇿 <b>{REST_NAME}</b>\nPastdagi tugma orqali menyuni oching.\n\n"
-        f"🇬🇧 <b>{REST_NAME}</b>\nTap the button below to open the menu."
+        "🇷🇺 <b>ARBA ISTAMBUL RESTAURANT</b>\nНажмите кнопку ниже, чтобы открыть меню.\n\n"
+        "🇺🇿 <b>ARBA ISTAMBUL RESTAURANT</b>\nPastdagi tugma orqali menyuni oching.\n\n"
+        "🇬🇧 <b>ARBA ISTAMBUL RESTAURANT</b>\nTap the button below to open the menu."
     )
 
     try:
@@ -117,7 +110,7 @@ async def post_menu(message: types.Message):
         logging.exception("CHANNEL POST ERROR")
         await message.answer(f"❌ Ошибка отправки в канал: <code>{e}</code>")
 
-# ====== HELPERS ======
+# ====== ВСПОМОГАТЕЛЬНЫЕ ======
 def fmt_sum(n: int) -> str:
     try:
         n = int(n)
@@ -144,21 +137,16 @@ def safe_int(v, default=0) -> int:
     except Exception:
         return default
 
-# ====== PARSE ORDER FROM WEBAPP ======
-def build_order_lines(data: dict) -> List[str]:
+# ====== ЧТЕНИЕ ЗАКАЗА ======
+def build_order_lines(data: dict) -> list[str]:
     raw_items = data.get("items")
-    lines: List[str] = []
+    lines: list[str] = []
 
     if isinstance(raw_items, list):
         for it in raw_items:
             if not isinstance(it, dict):
                 continue
-            name = (
-                clean_str(it.get("name_lang"))
-                or clean_str(it.get("name_ru"))
-                or clean_str(it.get("id"))
-                or "—"
-            )
+            name = clean_str(it.get("name_lang")) or clean_str(it.get("name_ru")) or clean_str(it.get("id")) or "—"
             qty = safe_int(it.get("qty"), 0)
             if qty <= 0:
                 continue
@@ -173,7 +161,7 @@ def build_order_lines(data: dict) -> List[str]:
 
     return lines
 
-# ====== WEBAPP DATA HANDLER ======
+# ====== ЗАКАЗ ИЗ WEBAPP ======
 @dp.message(F.web_app_data)
 async def webapp_data(message: types.Message):
     raw = message.web_app_data.data
@@ -194,29 +182,16 @@ async def webapp_data(message: types.Message):
     comment = clean_str(data.get("comment"))
     order_id = clean_str(data.get("order_id")) or "—"
 
-    # Инфо о пользователе из payload (если WebApp отправляет tg:{...})
-    tg_payload = data.get("tg") if isinstance(data.get("tg"), dict) else {}
-    tg_id_payload = clean_str(tg_payload.get("id"))
-    tg_user_payload = clean_str(tg_payload.get("username"))
-    tg_name_payload = clean_str(tg_payload.get("first_name"))
-
-    user_line = f"👤 <b>Telegram:</b> {tg_label(message.from_user)}"
-    if tg_id_payload or tg_user_payload or tg_name_payload:
-        user_line += (
-            f"\n🧾 <b>Из WebApp:</b> "
-            f"{('@' + tg_user_payload) if tg_user_payload else (tg_name_payload or '—')} (id: {tg_id_payload or '—'})"
-        )
-
     admin_text = (
-        f"🚨 <b>НОВЫЙ ЗАКАЗ {REST_NAME}</b>\n"
+        "🚨 <b>НОВЫЙ ЗАКАЗ ARBA ISTAMBUL RESTAURANT</b>\n"
         f"🆔 <b>{order_id}</b>\n\n"
-        + "\n".join(lines)
-        + f"\n\n💰 <b>Сумма:</b> {total_str} сум"
+        + "\n".join(lines) +
+        f"\n\n💰 <b>Сумма:</b> {total_str} сум"
         f"\n🚚 <b>Тип:</b> {order_type}"
         f"\n💳 <b>Оплата:</b> {payment}"
         f"\n📍 <b>Адрес:</b> {address}"
-        f"\n📞 <b>Телефон:</b> {phone}\n"
-        f"{user_line}"
+        f"\n📞 <b>Телефон:</b> {phone}"
+        f"\n👤 <b>Telegram:</b> {tg_label(message.from_user)}"
     )
 
     if comment:
@@ -229,7 +204,7 @@ async def webapp_data(message: types.Message):
         "🙏 Спасибо, мы скоро свяжемся с вами."
     )
 
-# ====== START ======
+# ====== ЗАПУСК ======
 async def main():
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
