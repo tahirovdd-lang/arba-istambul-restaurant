@@ -1,0 +1,238 @@
+# bot.py — Aiogram 3 / BotHost / GitHub Pages WebApp
+# Все настройки берутся из переменных окружения на BotHost.
+
+import asyncio
+import logging
+import json
+import os
+import time
+from typing import List
+
+from aiogram import Bot, Dispatcher, types, F
+from aiogram.filters import CommandStart, Command
+from aiogram.client.default import DefaultBotProperties
+from aiogram.types import (
+    ReplyKeyboardMarkup, KeyboardButton, WebAppInfo,
+    InlineKeyboardMarkup, InlineKeyboardButton
+)
+
+logging.basicConfig(level=logging.INFO)
+
+# ====== ENV (BotHost) ======
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+if not BOT_TOKEN:
+    raise RuntimeError("❌ BOT_TOKEN не найден. Добавь переменную окружения BOT_TOKEN на BotHost.")
+
+BOT_USERNAME = os.getenv("BOT_USERNAME", "arba_istambul_bot").replace("@", "")
+ADMIN_ID = int(os.getenv("ADMIN_ID", "6013591658"))
+CHANNEL_ID = os.getenv("CHANNEL_ID", "@ARBA_ISTAMBUL_RESTAURANT")
+
+# ✅ WebApp GitHub Pages
+WEBAPP_URL = os.getenv("WEBAPP_URL", "https://tahirovdd-lang.github.io/arba-istambul-restaurant/?v=1")
+
+# ✅ Название ресторана
+REST_NAME = os.getenv("REST_NAME", "ARBA ISTAMBUL RESTAURANT")
+
+# ✅ Текст кнопки
+BTN_OPEN_MULTI = os.getenv("BTN_OPEN_MULTI", "Ochish • Открыть • Open")
+
+# ====== BOT INIT ======
+bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
+dp = Dispatcher()
+
+# ====== АНТИ-ДУБЛЬ START ======
+_last_start: dict[int, float] = {}
+
+def allow_start(user_id: int, ttl: float = 2.0) -> bool:
+    now = time.time()
+    prev = _last_start.get(user_id, 0.0)
+    if now - prev < ttl:
+        return False
+    _last_start[user_id] = now
+    return True
+
+# ====== КНОПКИ ======
+def kb_webapp_reply() -> ReplyKeyboardMarkup:
+    # ✅ ReplyKeyboard с web_app
+    return ReplyKeyboardMarkup(
+        keyboard=[[KeyboardButton(text=BTN_OPEN_MULTI, web_app=WebAppInfo(url=WEBAPP_URL))]],
+        resize_keyboard=True
+    )
+
+def kb_channel_deeplink() -> InlineKeyboardMarkup:
+    # ✅ Синяя кнопка в канале (deeplink на бота -> startapp)
+    deeplink = f"https://t.me/{BOT_USERNAME}?startapp=menu"
+    return InlineKeyboardMarkup(
+        inline_keyboard=[[InlineKeyboardButton(text=BTN_OPEN_MULTI, url=deeplink)]]
+    )
+
+# ====== ТЕКСТ ======
+def welcome_text() -> str:
+    return (
+        f"🇷🇺 Добро пожаловать в <b>{REST_NAME}</b>! 👋 "
+        "Выберите блюда и оформите заказ — нажмите «Открыть» ниже.\n\n"
+        f"🇺🇿 <b>{REST_NAME}</b> ga xush kelibsiz! 👋 "
+        "Taomlarni tanlang va buyurtma bering — pastdagi «Ochish» tugmasini bosing.\n\n"
+        f"🇬🇧 Welcome to <b>{REST_NAME}</b>! 👋 "
+        "Choose dishes and place an order — tap “Open” below."
+    )
+
+# ====== /start ======
+@dp.message(CommandStart())
+async def start(message: types.Message):
+    if not allow_start(message.from_user.id):
+        return
+    await message.answer(welcome_text(), reply_markup=kb_webapp_reply())
+
+# Иногда на BotHost удобно дергать командой /startapp
+@dp.message(Command("startapp"))
+async def startapp(message: types.Message):
+    if not allow_start(message.from_user.id):
+        return
+    await message.answer(welcome_text(), reply_markup=kb_webapp_reply())
+
+# ====== ПОСТ В КАНАЛ + ЗАКРЕП ======
+@dp.message(Command("post_menu"))
+async def post_menu(message: types.Message):
+    if message.from_user.id != ADMIN_ID:
+        return await message.answer("⛔️ Нет доступа.")
+
+    text = (
+        f"🇷🇺 <b>{REST_NAME}</b>\nНажмите кнопку ниже, чтобы открыть меню.\n\n"
+        f"🇺🇿 <b>{REST_NAME}</b>\nPastdagi tugma orqali menyuni oching.\n\n"
+        f"🇬🇧 <b>{REST_NAME}</b>\nTap the button below to open the menu."
+    )
+
+    try:
+        sent = await bot.send_message(CHANNEL_ID, text, reply_markup=kb_channel_deeplink())
+        try:
+            await bot.pin_chat_message(CHANNEL_ID, sent.message_id, disable_notification=True)
+            await message.answer("✅ Пост отправлен в канал и закреплён.")
+        except Exception:
+            await message.answer(
+                "✅ Пост отправлен в канал.\n"
+                "⚠️ Не удалось закрепить — дай боту право «Закреплять сообщения»."
+            )
+    except Exception as e:
+        logging.exception("CHANNEL POST ERROR")
+        await message.answer(f"❌ Ошибка отправки в канал: <code>{e}</code>")
+
+# ====== HELPERS ======
+def fmt_sum(n: int) -> str:
+    try:
+        n = int(n)
+    except Exception:
+        n = 0
+    return f"{n:,}".replace(",", " ")
+
+def tg_label(u: types.User) -> str:
+    return f"@{u.username}" if u.username else u.full_name
+
+def clean_str(v) -> str:
+    return ("" if v is None else str(v)).strip()
+
+def safe_int(v, default=0) -> int:
+    try:
+        if v is None or isinstance(v, bool):
+            return default
+        if isinstance(v, (int, float)):
+            return int(v)
+        s = str(v).strip().replace(" ", "")
+        if s == "":
+            return default
+        return int(float(s))
+    except Exception:
+        return default
+
+# ====== PARSE ORDER FROM WEBAPP ======
+def build_order_lines(data: dict) -> List[str]:
+    raw_items = data.get("items")
+    lines: List[str] = []
+
+    if isinstance(raw_items, list):
+        for it in raw_items:
+            if not isinstance(it, dict):
+                continue
+            name = (
+                clean_str(it.get("name_lang"))
+                or clean_str(it.get("name_ru"))
+                or clean_str(it.get("id"))
+                or "—"
+            )
+            qty = safe_int(it.get("qty"), 0)
+            if qty <= 0:
+                continue
+            price = safe_int(it.get("price"), 0)
+            if price > 0:
+                lines.append(f"• {name} × {qty} = {fmt_sum(price * qty)} сум")
+            else:
+                lines.append(f"• {name} × {qty}")
+
+    if not lines:
+        lines = ["⚠️ Корзина пустая"]
+
+    return lines
+
+# ====== WEBAPP DATA HANDLER ======
+@dp.message(F.web_app_data)
+async def webapp_data(message: types.Message):
+    raw = message.web_app_data.data
+    await message.answer("✅ <b>Получил заказ.</b> Обрабатываю…")
+
+    try:
+        data = json.loads(raw) if raw else {}
+    except Exception:
+        data = {}
+
+    lines = build_order_lines(data)
+
+    total_str = clean_str(data.get("total_with_delivery")) or clean_str(data.get("total_items")) or "0"
+    payment = clean_str(data.get("payment")) or "—"
+    order_type = clean_str(data.get("type")) or "—"
+    address = clean_str(data.get("address")) or "—"
+    phone = clean_str(data.get("phone")) or "—"
+    comment = clean_str(data.get("comment"))
+    order_id = clean_str(data.get("order_id")) or "—"
+
+    # Инфо о пользователе из payload (если WebApp отправляет tg:{...})
+    tg_payload = data.get("tg") if isinstance(data.get("tg"), dict) else {}
+    tg_id_payload = clean_str(tg_payload.get("id"))
+    tg_user_payload = clean_str(tg_payload.get("username"))
+    tg_name_payload = clean_str(tg_payload.get("first_name"))
+
+    user_line = f"👤 <b>Telegram:</b> {tg_label(message.from_user)}"
+    if tg_id_payload or tg_user_payload or tg_name_payload:
+        user_line += (
+            f"\n🧾 <b>Из WebApp:</b> "
+            f"{('@' + tg_user_payload) if tg_user_payload else (tg_name_payload or '—')} (id: {tg_id_payload or '—'})"
+        )
+
+    admin_text = (
+        f"🚨 <b>НОВЫЙ ЗАКАЗ {REST_NAME}</b>\n"
+        f"🆔 <b>{order_id}</b>\n\n"
+        + "\n".join(lines)
+        + f"\n\n💰 <b>Сумма:</b> {total_str} сум"
+        f"\n🚚 <b>Тип:</b> {order_type}"
+        f"\n💳 <b>Оплата:</b> {payment}"
+        f"\n📍 <b>Адрес:</b> {address}"
+        f"\n📞 <b>Телефон:</b> {phone}\n"
+        f"{user_line}"
+    )
+
+    if comment:
+        admin_text += f"\n💬 <b>Комментарий:</b> {comment}"
+
+    await bot.send_message(ADMIN_ID, admin_text)
+
+    await message.answer(
+        "✅ <b>Ваш заказ принят!</b>\n"
+        "🙏 Спасибо, мы скоро свяжемся с вами."
+    )
+
+# ====== START ======
+async def main():
+    await bot.delete_webhook(drop_pending_updates=True)
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    asyncio.run(main())
