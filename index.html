@@ -5,12 +5,12 @@
 <title>ARBA ISTAMBUL RESTAURANT</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
 
 <style>
 :root{
   /* ✅ Turkish flag vibe */
-  --bg:#8B0E13;               /* тёмно-красный как флаг */
+  --bg:#8B0E13;
   --surface: rgba(255,255,255,.08);
   --surface2: rgba(255,255,255,.06);
 
@@ -76,19 +76,22 @@ body{
   border:1px solid rgba(255,255,255,.20);
   box-shadow:0 14px 30px rgba(0,0,0,.22);
 }
-.brand-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;transform: translateX(16px);}
-.brand-title{font-family:'Lobster',cursive;font-size:30px;line-height:1;letter-spacing:.2px;}
-.brand-title2{font-family:'Montserrat',sans-serif;font-weight:900;font-size:18px;letter-spacing:2px;line-height:1.1;}
-.brand-slogan{
-  font-family:'Montserrat',sans-serif;
-  font-size:12px;
+
+/* ✅ классический шрифт для ARBA */
+.brand-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;transform: translateX(16px);}
+.brand-title{
+  font-family: "Georgia","Times New Roman",Times,serif;  /* ✅ классика */
+  font-size:30px;
+  line-height:1;
+  letter-spacing:.5px;
   font-weight:800;
-  letter-spacing:1.2px;
-  opacity:.92;
-  margin-top:2px;
-  text-transform:uppercase;
 }
-.brand-phone{position:relative; z-index:50; pointer-events:auto; margin-top:4px; display:flex; flex-direction:column; gap:2px;}
+.brand-title2{font-family:'Montserrat',sans-serif;font-weight:900;font-size:18px;letter-spacing:2px;line-height:1.1;}
+
+/* ✅ убрали слоган */
+.brand-slogan{display:none;}
+
+.brand-phone{position:relative; z-index:50; pointer-events:auto; margin-top:2px; display:flex; flex-direction:column; gap:2px;}
 .brand-phone a{
   color:var(--white);text-decoration:none;font-size:14px;font-weight:800;
   position:relative;z-index:51;pointer-events:auto;cursor:pointer;opacity:.95;
@@ -124,7 +127,7 @@ body{
 .act-ico{font-size:16px;line-height:1;color:#1b1b1b;}
 
 /* buttons */
-.langs,.types,.payments{display:flex;gap:12px;padding:12px;justify-content:center;}
+.langs,.types,.payments{display:flex;gap:12px;padding:12px;justify-content:center;flex-wrap:wrap;}
 .btn{
   padding:12px 20px;border-radius:28px;font-weight:900;min-width:120px;text-align:center;
   cursor:pointer;transition:.15s;border:1px solid rgba(255,255,255,.28);
@@ -161,7 +164,7 @@ body{
   color:#1d1d1d;
 }
 
-/* ✅ увеличил фото блюд */
+/* фото блюд */
 .img{height:170px;display:flex;align-items:center;justify-content:center;margin-bottom:6px;}
 .img img{max-width:150px;max-height:150px;object-fit:contain;transform:scale(1.06);transition:.15s;cursor:pointer;}
 
@@ -386,6 +389,25 @@ textarea.input{height:90px;}
   border-color:rgba(255,255,255,.35);
 }
 
+/* ✅ онлайн-оплата блок */
+.online-box{
+  display:none;
+  margin:10px auto 0;
+  width:85%;
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:18px;
+  background:rgba(0,0,0,.03);
+  padding:12px;
+}
+.online-row{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:8px;}
+.online-label{font-weight:900;}
+.online-val{font-weight:900;color:#8B0E13;word-break:break-word;}
+.copy-btn{
+  min-width:auto;
+  padding:10px 14px;
+  border-radius:14px;
+}
+
 @media (max-width:420px){
   .brand-title{font-size:28px;}
   .brand-title2{font-size:16px;}
@@ -393,6 +415,7 @@ textarea.input{height:90px;}
   .header{padding:14px 10px 24px;}
   .input{width:92%;}
   .products{gap:14px;}
+  .online-box{width:92%;}
 }
 @media (max-width:360px){
   .header img{width:76px;height:76px;left:10px;}
@@ -413,11 +436,11 @@ textarea.input{height:90px;}
   <div class="brand-wrap">
     <div class="brand-title">ARBA</div>
     <div class="brand-title2">ISTAMBUL RESTAURANT</div>
-    <div class="brand-slogan">BIZ BILAN MAZZALIROQ</div>
 
     <div class="brand-phone">
-      <a href="tel:+998900000000" onclick="callPhone(event)">+998 90 000 00 00</a>
-      <a href="tel:+998990000000" onclick="callPhone2(event)">+998 99 000 00 00</a>
+      <!-- ✅ новые номера -->
+      <a href="tel:+998662334499" onclick="callPhone(event)">+998 66 233 44 99</a>
+      <a href="tel:+998935336067" onclick="callPhone2(event)">+998 93 533 60 67</a>
     </div>
   </div>
 
@@ -499,8 +522,8 @@ textarea.input{height:90px;}
         <div style="height:12px;"></div>
 
         <div style="font-weight:900; margin-bottom:6px;" id="mLegalPhone">📞 Телефон</div>
-        <a href="tel:+998900000000" onclick="callPhone(event)" style="text-decoration:none; font-weight:900; color:#8B0E13;" id="mLegalPhoneNum">
-          +998 90 000 00 00
+        <a href="tel:+998662334499" onclick="callPhone(event)" style="text-decoration:none; font-weight:900; color:#8B0E13;" id="mLegalPhoneNum">
+          +998 66 233 44 99
         </a>
 
         <div style="height:12px;"></div>
@@ -511,12 +534,12 @@ textarea.input{height:90px;}
       </div>
     </div>
 
-    <a class="menu-item" href="tel:+998900000000" onclick="closeTopMenu()">
+    <a class="menu-item" href="tel:+998662334499" onclick="closeTopMenu()">
       <div class="menu-left">
         <div class="menu-ic">📞</div>
         <div class="menu-txt">
           <div class="menu-name" id="mCallTitle">Позвонить</div>
-          <div class="menu-sub" id="mCallSub">+998 90 000 00 00</div>
+          <div class="menu-sub" id="mCallSub">+998 66 233 44 99</div>
         </div>
       </div>
       <div class="menu-right">›</div>
@@ -530,7 +553,8 @@ textarea.input{height:90px;}
           </svg>
         </div>
         <div class="menu-txt">
-          <div class="menu-name" id="mInstaTitle">@arba_istambul</div>
+          <!-- ✅ новый @ -->
+          <div class="menu-name" id="mInstaTitle">@arba_istanbul_restaurant01</div>
           <div class="menu-sub" id="mInstaSub">Открыть Instagram</div>
         </div>
       </div>
@@ -610,6 +634,27 @@ textarea.input{height:90px;}
   <div class="payments">
     <button class="btn active" id="payCash" onclick="setPayment('cash')"></button>
     <button class="btn" id="payClick" onclick="setPayment('click')"></button>
+    <!-- ✅ онлайн оплата -->
+    <button class="btn" id="payOnline" onclick="setPayment('online')">💳 Онлайн</button>
+  </div>
+
+  <!-- ✅ данные карты/получателя -->
+  <div class="online-box" id="onlineBox">
+    <div class="online-label">Получатель</div>
+    <div class="online-row">
+      <div class="online-val" id="recipVal">Tahirov Daler</div>
+      <button class="btn copy-btn" type="button" onclick="copyText('Tahirov Daler')">Копировать</button>
+    </div>
+
+    <div class="online-label" style="margin-top:10px;">Карта</div>
+    <div class="online-row">
+      <div class="online-val" id="cardVal">9860 1001 2635 9502</div>
+      <button class="btn copy-btn" type="button" onclick="copyText('9860100126359502')">Копировать</button>
+    </div>
+
+    <div style="margin-top:8px; font-size:12px; opacity:.75;">
+      После оплаты нажмите «Оформить заказ» и напишите в комментарии “Оплатил(а)”.
+    </div>
   </div>
 
   <button class="order-btn" id="orderBtn" onclick="sendOrder()"></button>
@@ -668,11 +713,42 @@ window.addEventListener('orientationchange', ()=>setTimeout(syncStickyHeight, 25
 const ADMIN_ID = 6013591658;
 const DELIVERY_FEE = 10000;
 
+/* ✅ новая геолокация (везде) */
+const MAP_URL = "https://yandex.uz/maps/org/60749009354/?filter=alternate_vertical%3ARequestWindow&ll=66.950198%2C39.651845&mode=search&sctx=ZAAAAAgBEAAaKAoSCXHjFvNzvlBAETEnaJPD00NAEhIJR8Zq8%2F9SJkARnu488Zz9FEAiBgABAgMEBSgKOABAqwFIAWIkc25pcHBldF9leHBfbmFtZT1mdWxsb2JqZWN0cy8xLng6cmVmYiNzbmlwcGV0X2V4cF9uYW1lPXRvcG9iamVjdHMvMS54OnJlZmIec25pcHBldF9leHBfbmFtZT1nb29kcy8xLng6cmVmYidzbmlwcGV0X2V4cF9uYW1lPWdvb2RzX3JlZ2lzdGVyLzEueDpyZWZiC2ZyZXNobmVzcz0wYhdzb3VyY2U9YnVzaW5lc3M6ZXhwX3JlZmIVc291cmNlPXByaWNlczpleHBfcmVmagJ1ep0BzczMPaABAKgBAL0BByYCjMIBBsqjsafiAYICGEFyYmEgaXN0YW5idWwgcmVzdGF1cmFudIoCAJICBTExNTA4mgIMZGVza3RvcC1tYXBz&sll=66.950198%2C39.651845&sspn=0.043602%2C0.020502&text=Arba%20istanbul%20restaurant&z=15";
+
+/* ✅ новый instagram */
+const INSTA_URL = "https://www.instagram.com/arba_istanbul_restaurant01/";
+
+/* ✅ новые телефоны */
+const PHONE1_DISPLAY = "+998 66 233 44 99";
+const PHONE1_TEL = "tel:+998662334499";
+const PHONE2_DISPLAY = "+998 93 533 60 67";
+const PHONE2_TEL = "tel:+998935336067";
+
 /* Telegram user */
 const tgUser = Telegram.WebApp.initDataUnsafe?.user || {};
 const tg_username = tgUser.username || "";
 const tg_first_name = tgUser.first_name || "";
 const tg_id = tgUser.id || "";
+
+/* copy helper */
+function copyText(t){
+  const text = String(t || "");
+  if(!text) return;
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text);
+    }else{
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position='fixed'; ta.style.left='-9999px';
+      document.body.appendChild(ta);
+      ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    Telegram.WebApp.HapticFeedback?.notificationOccurred?.('success');
+  }catch(_){}
+}
 
 /* UI */
 const UI = {
@@ -708,6 +784,7 @@ const UI = {
 
     cash:'💵 Наличные',
     click:'💳 CLICK',
+    online:'💳 Онлайн',
 
     sum:'сум',
     subcats:'Подкатегории'
@@ -744,6 +821,7 @@ const UI = {
 
     cash:'💵 Naqd',
     click:'💳 CLICK',
+    online:'💳 Onlayn',
 
     sum:"so‘m",
     subcats:"Bo'limlar"
@@ -780,6 +858,7 @@ const UI = {
 
     cash:'💵 Cash',
     click:'💳 CLICK',
+    online:'💳 Online',
 
     sum:'sum',
     subcats:'Subcategories'
@@ -788,7 +867,7 @@ const UI = {
 
 let lang='ru', category='meals', subcat='all', type='delivery', payment='cash', cart={};
 
-/* ✅ ДЕМО-меню ресторана (замени на своё) */
+/* меню (демо) */
 const MENU = {
   meals:[
     {id:'meal_kebab', p:45000, img:'images/meal_kebab.jpg', n:{ru:'Кебаб', uz:'Kebab', en:'Kebab'}},
@@ -868,6 +947,7 @@ function applyUI(){
 
   payCash.innerText = UI[lang].cash;
   payClick.innerText = UI[lang].click;
+  payOnline.innerText = UI[lang].online;
 
   stickyCartBtn.innerText = UI[lang].cart;
   sumCurrency.innerText = UI[lang].sum;
@@ -886,19 +966,17 @@ function applyUI(){
 /* header actions */
 function openTopMenu(){ closeSearch(); menuBackdrop.classList.add('show'); menuSheet.classList.add('show'); }
 function closeTopMenu(){ menuBackdrop.classList.remove('show'); menuSheet.classList.remove('show'); }
+
 function openRoute(){
-  const url = "https://yandex.uz/maps/?rtext=~39.684041,66.960593&rtt=auto&z=16.65";
-  try{ Telegram.WebApp.openLink(url); }catch(_){ window.open(url,'_blank'); }
+  try{ Telegram.WebApp.openLink(MAP_URL); }catch(_){ window.open(MAP_URL,'_blank'); }
 }
 function callPhone(e){
   try{ e.preventDefault(); e.stopPropagation(); }catch(_){}
-  const tel = "tel:+998900000000";
-  try{ Telegram.WebApp.openLink(tel); }catch(_){ window.location.href = tel; }
+  try{ Telegram.WebApp.openLink(PHONE1_TEL); }catch(_){ window.location.href = PHONE1_TEL; }
 }
 function callPhone2(e){
   try{ e.preventDefault(); e.stopPropagation(); }catch(_){}
-  const tel = "tel:+998990000000";
-  try{ Telegram.WebApp.openLink(tel); }catch(_){ window.location.href = tel; }
+  try{ Telegram.WebApp.openLink(PHONE2_TEL); }catch(_){ window.location.href = PHONE2_TEL; }
 }
 function openMail(e){
   try{ e.preventDefault(); e.stopPropagation(); }catch(_){}
@@ -925,9 +1003,8 @@ function openYandexReviews(e){ try{e.preventDefault();e.stopPropagation();}catch
   try{Telegram.WebApp.openLink(YANDEX_REVIEWS_URL);}catch(_){window.open(YANDEX_REVIEWS_URL,'_blank');}
 }
 function openInstagram(e){ try{e.preventDefault();e.stopPropagation();}catch(_){}
-  const url="https://www.instagram.com/arba_istambul/";
   closeTopMenu();
-  try{Telegram.WebApp.openLink(url);}catch(_){window.open(url,'_blank');}
+  try{Telegram.WebApp.openLink(INSTA_URL);}catch(_){window.open(INSTA_URL,'_blank');}
 }
 
 /* image modal */
@@ -1093,7 +1170,7 @@ function renderCats(){
   }
 }
 
-/* subcats sheet (не используем, но оставили чтобы не ломать UI) */
+/* subcats */
 const SUBCATS = [{key:'all', ic:'📌', t:{ru:'Все',uz:'Hammasi',en:'All'}}];
 function renderCakeSubcatsGrid(){
   const grid = document.getElementById('cakeGrid');
@@ -1149,6 +1226,10 @@ function setPayment(p){
   payment=p;
   payCash.classList.toggle('active', p==='cash');
   payClick.classList.toggle('active', p==='click');
+  payOnline.classList.toggle('active', p==='online');
+
+  const ob = document.getElementById('onlineBox');
+  if(ob) ob.style.display = (p === 'online') ? 'block' : 'none';
 }
 function openCart(){
   const el = document.getElementById('cartBox');
@@ -1212,30 +1293,21 @@ function sendOrder(){
   },700);
 }
 
-/* theme (оставили, но визуально уже “flag style”) */
-function applyTheme(theme){
-  document.body.setAttribute('data-theme', theme);
-  localStorage.setItem('arba_theme', theme);
-  const sub = document.getElementById('themeMenuSub');
-  if(sub) sub.innerText = (lang==='ru'?'Светлая':lang==='uz'?'Yorug‘':'Light');
+/* theme */
+function applyTheme(){
   try{
     Telegram.WebApp.setHeaderColor?.('#8B0E13');
     Telegram.WebApp.setBackgroundColor?.('#8B0E13');
   }catch(_){}
 }
-function toggleThemeFromMenu(){
-  applyTheme('light');
-}
-(function initTheme(){
-  applyTheme('light');
-})();
+applyTheme();
 
 /* init */
 renderPopular(); renderNew(); renderGift();
 renderCats(); renderCakeSubcatsGrid(); renderProducts();
 
 address.value = localStorage.getItem('arba_address') || '';
-phone.value = localStorage.getItem('arba_phone') || '+998 90 000 00 00';
+phone.value = localStorage.getItem('arba_phone') || PHONE1_DISPLAY;
 address.addEventListener('input',()=>localStorage.setItem('arba_address',address.value));
 phone.addEventListener('input',()=>localStorage.setItem('arba_phone',phone.value));
 
