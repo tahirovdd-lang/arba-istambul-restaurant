@@ -19,16 +19,17 @@
 
   --stroke: rgba(255,255,255,.18);
   --stroke-strong: rgba(255,255,255,.26);
-  --inner: rgba(255,255,255,.10);
+
   --shadow: rgba(0,0,0,.22);
-  --shadow-strong: rgba(0,0,0,.32);
 
   --r-lg:24px;
   --r-md:22px;
-  --r-pill:28px;
 
   --vh: 1vh;
   --sticky-h: 86px;
+
+  /* ✅ акцент (красный) */
+  --accent: #8B0E13;
 }
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -98,7 +99,7 @@ body{
   position:relative;z-index:51;pointer-events:auto;cursor:pointer;opacity:.95;
 }
 
-/* ✅ header action buttons smaller */
+/* header actions smaller */
 .header-actions{
   position:absolute;
   right:8px;
@@ -111,8 +112,8 @@ body{
   z-index:90;
 }
 .act-btn{
-  width:32px;height:32px;               /* ✅ было 36 */
-  border-radius:12px;                   /* ✅ было 14 */
+  width:32px;height:32px;
+  border-radius:12px;
   display:flex;align-items:center;justify-content:center;
   cursor:pointer;user-select:none;
   background:rgba(255,255,255,.95);
@@ -121,41 +122,71 @@ body{
   transition:.15s;
 }
 .act-btn:active{transform:scale(.97);}
-.burger{width:18px;height:12px;position:relative;} /* ✅ меньше */
+.burger{width:18px;height:12px;position:relative;}
 .burger span{position:absolute;left:0;right:0;height:2.6px;border-radius:10px;background:#1b1b1b;opacity:.9;}
 .burger span:nth-child(1){top:0;}
 .burger span:nth-child(2){top:4.8px;}
 .burger span:nth-child(3){bottom:0;}
-.act-ico{font-size:14px;line-height:1;color:#1b1b1b;} /* ✅ меньше */
+.act-ico{font-size:14px;line-height:1;color:#1b1b1b;}
 
-/* buttons rows */
-.langs,.types,.payments{display:flex;gap:12px;padding:12px;justify-content:center;}
-.langs{flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:10px;}
-.payments{flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:10px;}
+/* rows */
+.langs,.types,.payments{
+  display:flex;
+  gap:10px;
+  padding:12px;
+  justify-content:center;
+  flex-wrap:nowrap;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
 
+/* base button */
 .btn{
-  padding:12px 18px;border-radius:28px;font-weight:900;min-width:112px;text-align:center;
-  cursor:pointer;transition:.15s;border:1px solid rgba(255,255,255,.28);
+  padding:12px 18px;
+  border-radius:28px;
+  font-weight:900;
+  min-width:112px;
+  text-align:center;
+  cursor:pointer;
+  transition:.15s;
+  border:1px solid rgba(255,255,255,.28);
   background:#ffffff;
   color:#8B0E13;
   box-shadow: 0 10px 22px rgba(0,0,0,.18);
   flex:0 0 auto;
 }
 .btn:active{transform:scale(.98);}
+
+/* ✅ активная кнопка = красная */
 .btn.active{
-  background:#ffffff;
-  color:#8B0E13;
-  border:1px solid rgba(255,255,255,.55);
+  background: var(--accent);
+  color: #ffffff;
+  border:1px solid rgba(255,255,255,.42);
   box-shadow: 0 14px 26px rgba(0,0,0,.22);
 }
+
+/* category buttons */
 .cat-btn{padding:12px 18px;min-width:132px;font-size:14px;border-radius:999px;}
 
-/* ✅ payments buttons a bit smaller */
+/* ✅ language buttons narrower + flags */
+.langs .btn{
+  min-width:92px;      /* ✅ уже */
+  padding:10px 12px;   /* ✅ уже */
+  border-radius:22px;
+  font-size:13.5px;
+}
+.lang-flag{margin-right:8px; font-size:16px; line-height:1;}
+
+/* ✅ payments narrower */
 .payments .btn{
-  padding:10px 14px;       /* ✅ меньше */
-  min-width:98px;          /* ✅ меньше */
-  border-radius:22px;      /* ✅ меньше */
-  font-size:13.5px;        /* ✅ чуть меньше */
+  min-width:84px;       /* ✅ уже */
+  padding:9px 10px;     /* ✅ уже */
+  border-radius:20px;
+  font-size:13px;
+}
+.payments .btn.copy-btn{
+  min-width:auto;
+  padding:10px 12px;
 }
 
 .input{
@@ -177,19 +208,15 @@ body{
   transition:.15s;
   color:#1d1d1d;
 }
-
-/* фото блюд */
 .img{height:170px;display:flex;align-items:center;justify-content:center;margin-bottom:6px;}
 .img img{max-width:150px;max-height:150px;object-fit:contain;transform:scale(1.06);transition:.15s;cursor:pointer;}
-
 .item-name{margin-top:2px;padding:0 6px;font-weight:900;line-height:1.15;min-height:40px;display:flex;align-items:center;justify-content:center;word-break:break-word;}
 .price{font-weight:900;color:#8B0E13;margin-top:6px;}
 .price small{font-weight:800;opacity:.75;margin-left:4px;}
 .counter{display:flex;justify-content:center;gap:10px;margin-top:8px;align-items:center;}
 .counter button{
   width:32px;height:32px;border-radius:50%;cursor:pointer;border:1px solid rgba(255,255,255,.35);
-  background:#8B0E13;
-  color:#fff;font-size:18px;font-weight:900;box-shadow:0 12px 24px rgba(0,0,0,.18);
+  background:#8B0E13;color:#fff;font-size:18px;font-weight:900;box-shadow:0 12px 24px rgba(0,0,0,.18);
   transition:.15s;
 }
 .counter button:active{transform:scale(.96);}
@@ -214,8 +241,7 @@ body{
 .pop-counter,.mini-counter{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:8px;}
 .pop-counter button,.mini-counter button{
   width:30px;height:30px;border-radius:50%;cursor:pointer;border:1px solid rgba(255,255,255,.35);
-  background:#8B0E13;
-  color:#fff;font-size:18px;font-weight:900;box-shadow:0 12px 24px rgba(0,0,0,.18);
+  background:#8B0E13;color:#fff;font-size:18px;font-weight:900;box-shadow:0 12px 24px rgba(0,0,0,.18);
 }
 .mini-card{min-width:132px;border-radius:22px;}
 .mini-counter button{width:28px;height:28px;}
@@ -366,35 +392,18 @@ textarea.input{height:90px;}
 .menu-right{opacity:.65;font-weight:900;}
 
 /* search */
-.search-title{
-  display:none;
-  width:100%;
-  padding:10px 14px 0;
-  font-weight:900;
-  color:var(--white);
-}
+.search-title{display:none;width:100%;padding:10px 14px 0;font-weight:900;color:var(--white);}
 .search-title.show{display:block;}
-.search-wrap{
-  display:none;
-  position:relative;
-  padding:10px 12px 6px;
-  gap:10px;
-  align-items:center;
-}
+.search-wrap{display:none;position:relative;padding:10px 12px 6px;gap:10px;align-items:center;}
 .search-wrap.show{display:flex;}
 .search-wrap .input{width:100%;margin:0;}
 .search-clear{
-  position:absolute;
-  right:20px;
-  top:50%;
-  transform:translateY(-50%);
+  position:absolute;right:20px;top:50%;transform:translateY(-50%);
   width:32px;height:32px;border-radius:12px;
   display:flex;align-items:center;justify-content:center;
   background:rgba(0,0,0,.06);
   border:1px solid rgba(0,0,0,.08);
-  cursor:pointer;
-  color:#333;
-  font-weight:900;
+  cursor:pointer;color:#333;font-weight:900;
 }
 
 /* online block */
@@ -410,7 +419,7 @@ textarea.input{height:90px;}
 .online-row{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:8px;}
 .online-label{font-weight:900;}
 .online-val{font-weight:900;color:#8B0E13;word-break:break-word;}
-.copy-btn{min-width:auto;padding:10px 14px;border-radius:14px;}
+.copy-btn{min-width:auto;padding:10px 12px;border-radius:14px;}
 
 @media (max-width:420px){
   .brand-title{font-size:28px;}
@@ -428,7 +437,8 @@ textarea.input{height:90px;}
   .brand-phone a{font-size:13px;}
   .btn{min-width:108px;padding:12px 16px;}
   .cat-btn{min-width:126px;padding:12px 16px;font-size:13px;}
-  .payments .btn{min-width:92px;padding:10px 12px;font-size:13px;}
+  .langs .btn{min-width:86px;padding:10px 10px;font-size:13px;}
+  .payments .btn{min-width:78px;padding:9px 9px;font-size:12.5px;}
 }
 </style>
 </head>
@@ -572,19 +582,18 @@ textarea.input{height:90px;}
   <div class="search-clear" onclick="clearSearch()" title="Очистить">✖</div>
 </div>
 
+<!-- ✅ язык в одну строку + флаги + уже -->
 <div class="langs">
-  <button class="btn active" onclick="setLang('ru',this)">RU</button>
-  <button class="btn" onclick="setLang('uz',this)">UZ</button>
-  <button class="btn" onclick="setLang('en',this)">EN</button>
-  <button class="btn" onclick="setLang('tr',this)">TR</button>
+  <button class="btn active" onclick="setLang('ru',this)"><span class="lang-flag">🇷🇺</span>RU</button>
+  <button class="btn" onclick="setLang('uz',this)"><span class="lang-flag">🇺🇿</span>UZ</button>
+  <button class="btn" onclick="setLang('en',this)"><span class="lang-flag">🇬🇧</span>EN</button>
+  <button class="btn" onclick="setLang('tr',this)"><span class="lang-flag">🇹🇷</span>TR</button>
 </div>
 
 <div class="popular-wrap" id="popularWrap">
   <div class="popular-title" id="popularTitle">🔥 Популярное</div>
   <div class="popular-row" id="popularRow"></div>
 </div>
-
-<!-- ✅ УБРАЛИ КАРУСЕЛЬ "НОВИНКИ" -->
 
 <div class="popular-wrap" id="giftWrap">
   <div class="popular-title" id="giftTitle">⭐ Рекомендуем</div>
@@ -610,6 +619,7 @@ textarea.input{height:90px;}
 
   <textarea id="comment" class="input"></textarea>
 
+  <!-- ✅ оплаты в один ряд и уже -->
   <div class="payments">
     <button class="btn active" id="payCash" onclick="setPayment('cash')"></button>
     <button class="btn" id="payClick" onclick="setPayment('click')"></button>
@@ -688,9 +698,15 @@ window.addEventListener('orientationchange', ()=>setTimeout(syncStickyHeight, 25
 
 /* SETTINGS */
 const ADMIN_ID = 6013591658;
-const DELIVERY_FEE = 10000;
 
-const MAP_URL = "https://yandex.uz/maps/org/60749009354/?filter=alternate_vertical%3ARequestWindow&ll=66.950198%2C39.651845&mode=search&sctx=ZAAAAAgBEAAaKAoSCXHjFvNzvlBAETEnaJPD00NAEhIJR8Zq8%2F9SJkARnu488Zz9FEAiBgABAgMEBSgKOABAqwFIAWIkc25pcHBldF9leHBfbmFtZT1mdWxsb2JqZWN0cy8xLng6cmVmYiNzbmlwcGV0X2V4cF9uYW1lPXRvcG9iamVjdHMvMS54OnJlZmIec25pcHBldF9leHBfbmFtZT1nb29kcy8xLng6cmVmYidzbmlwcGV0X2V4cF9uYW1lPWdvb2RzX3JlZ2lzdGVyLzEueDpyZWZiC2ZyZXNobmVzcz0wYhdzb3VyY2U9YnVzaW5lc3M6ZXhwX3JlZmIVc291cmNlPXByaWNlczpleHBfcmVmagJ1ep0BzczMPaABAKgBAL0BByYCjMIBBsqjsafiAYICGEFyYmEgaXN0YW5idWwgcmVzdGF1cmFudIoCAJICBTExNTA4mgIMZGVza3RvcC1tYXBz&sll=66.950198%2C39.651845&sspn=0.043602%2C0.020502&text=Arba%20istanbul%20restaurant&z=15";
+/* ✅ ОТКЛЮЧИЛИ автосчет доставки */
+const DELIVERY_FEE = 0;
+
+/* ✅ одна и та же ссылка для геолокации и "Оставить отзыв" */
+const YANDEX_LINK = "https://yandex.uz/maps/org/60749009354/?filter=alternate_vertical%3ARequestWindow&ll=66.950198%2C39.651845&mode=search&sctx=ZAAAAAgBEAAaKAoSCfBrJAnCu1BAEdOHLqhv00NAEhIJDJQUWABTpj8ReqcC7nn%2BlD8iBgABAgMEBSgKOABA3lBIAWIkc25pcHBldF9leHBfbmFtZT1mdWxsb2JqZWN0cy8xLng6cmVmYiNzbmlwcGV0X2V4cF9uYW1lPXRvcG9iamVjdHMvMS54OnJlZmIec25pcHBldF9leHBfbmFtZT1nb29kcy8xLng6cmVmYidzbmlwcGV0X2V4cF9uYW1lPWdvb2RzX3JlZ2lzdGVyLzEueDpyZWZiC2ZyZXNobmVzcz0wYhdzb3VyY2U9YnVzaW5lc3M6ZXhwX3JlZmIVc291cmNlPXByaWNlczpleHBfcmVmagJ1ep0BzczMPaABAKgBAL0BByYCjMIBBsqjsafiAYICGEFyYmEgaXN0YW5idWwgcmVzdGF1cmFudIoCAJICBTExNTA4mgIMZGVza3RvcC1tYXBz&sll=66.950198%2C39.651845&sspn=0.043602%2C0.020502&text=Arba%20istanbul%20restaurant&z=15";
+
+const MAP_URL = YANDEX_LINK;
+const YANDEX_REVIEWS_URL = YANDEX_LINK;
 
 const INSTA_URL = "https://www.instagram.com/arba_istanbul_restaurant01/";
 
@@ -698,9 +714,6 @@ const PHONE1_DISPLAY = "+998 66 233 44 99";
 const PHONE1_TEL = "tel:+998662334499";
 const PHONE2_DISPLAY = "+998 93 533 60 67";
 const PHONE2_TEL = "tel:+998935336067";
-
-/* ✅ обновлённая ссылка на отзывы (по запросу) */
-const YANDEX_REVIEWS_URL="https://yandex.uz/maps/org/60749009354/?filter=alternate_vertical%3ARequestWindow&ll=66.950198%2C39.651845&mode=search&sctx=ZAAAAAgBEAAaKAoSCfBrJAnCu1BAEdOHLqhv00NAEhIJDJQUWABTpj8ReqcC7nn%2BlD8iBgABAgMEBSgKOABA3lBIAWIkc25pcHBldF9leHBfbmFtZT1mdWxsb2JqZWN0cy8xLng6cmVmYiNzbmlwcGV0X2V4cF9uYW1lPXRvcG9iamVjdHMvMS54OnJlZmIec25pcHBldF9leHBfbmFtZT1nb29kcy8xLng6cmVmYidzbmlwcGV0X2V4cF9uYW1lPWdvb2RzX3JlZ2lzdGVyLzEueDpyZWZiC2ZyZXNobmVzcz0wYhdzb3VyY2U9YnVzaW5lc3M6ZXhwX3JlZmIVc291cmNlPXByaWNlczpleHBfcmVmagJ1ep0BzczMPaABAKgBAL0BByYCjMIBBsqjsafiAYICGEFyYmEgaXN0YW5idWwgcmVzdGF1cmFudIoCAJICBTExNTA4mgIMZGVza3RvcC1tYXBz&sll=66.950198%2C39.651845&sspn=0.043602%2C0.020502&text=Arba%20istanbul%20restaurant&z=15";
 
 /* Telegram user */
 const tgUser = Telegram.WebApp.initDataUnsafe?.user || {};
@@ -727,7 +740,7 @@ function copyText(t){
   }catch(_){}
 }
 
-/* UI (TR included) */
+/* UI */
 const UI = {
   ru:{menu:'Меню',reviewTitle:'Оставить отзыв',reviewSub:'Яндекс рейтинг / отзывы',reviewHint:'Если виджет не открылся в Telegram — откройте отзывы через кнопку ниже.',reviewOpen:'Открыть отзывы',legalTitle:'Юридическим лицам',legalSub:'Контакты для договоров / счетов',legalMail:'✉️ Почта',legalPhone:'📞 Телефон',legalChat:'💬 Чат с менеджером',callTitle:'Позвонить',instaSub:'Открыть Instagram',searchResults:'Результаты поиска',popular:'🔥 Популярное',gift:'⭐ Рекомендуем',delivery:'🚚 Доставка',pickup:'🏃 Самовывоз',address:'📍 Адрес доставки',phone:'📞 Телефон',cart:'🛒 Корзина',total:'Итого',order:'Оформить заказ',comment:'✍️ Комментарий к заказу',cash:'💵 Наличные',click:'💳 CLICK',online:'💳 Онлайн',sum:'сум'},
   uz:{menu:'Menyu',reviewTitle:'Fikr qoldirish',reviewSub:'Yandex reyting / fikrlar',reviewHint:"Agar vidjet Telegramda ochilmasa — pastdagi tugma orqali fikrlarni oching.",reviewOpen:"Fikrlarni ochish",legalTitle:'Yuridik shaxslar',legalSub:"Shartnoma / hisob uchun kontaktlar",legalMail:'✉️ Pochta',legalPhone:'📞 Telefon',legalChat:'💬 Menejer bilan chat',callTitle:"Qo'ng'iroq qilish",instaSub:"Instagramni ochish",searchResults:'Qidiruv natijalari',popular:'🔥 Ommabop',gift:'⭐ Tavsiya',delivery:'🚚 Yetkazish',pickup:'🏃 Olib ketish',address:'📍 Manzil',phone:'📞 Telefon',cart:'🛒 Savat',total:'Jami',order:'Buyurtma berish',comment:'✍️ Izoh',cash:'💵 Naqd',click:'💳 CLICK',online:'💳 Onlayn',sum:"so‘m"},
@@ -737,7 +750,7 @@ const UI = {
 
 let lang='ru', category='salads', type='delivery', payment='cash', cart={};
 
-/* MENU (same as before) */
+/* MENU */
 const MENU = {
   salads:[
     {id:'salad_baklajon_yogurt', p:39000, img:'images/salad_baklajon_yogurt.jpg', n:{ru:'Баклажан с йогуртом', uz:'Baqlajon yogurt bilan', en:'Eggplant with yogurt', tr:'Yoğurtlu patlıcan'}},
@@ -1042,7 +1055,7 @@ function calcItemsSum(){
   for(const id in cart) s += (cart[id]||0) * (ITEM_INDEX[id]?.p||0);
   return s;
 }
-function calcDeliveryFee(){ return (type === 'delivery') ? DELIVERY_FEE : 0; }
+function calcDeliveryFee(){ return 0; } /* ✅ всегда 0 */
 function updateTotal(){
   const itemsSum = calcItemsSum();
   const dfee = calcDeliveryFee();
@@ -1182,6 +1195,26 @@ function applyTheme(){
 applyTheme();
 
 /* init */
+const POPULAR = ['hot_iskender_kebab','grill_adana_kebab','pide_lahmacun'];
+const GIFT_ITEMS = ['hot_dana_bonfile','steak_pirzola_lamb','pide_mix'];
+
+function renderPopular(){
+  popularRow.innerHTML='';
+  POPULAR.forEach(id=>{
+    const it = ITEM_INDEX[id]; if(!it) return;
+    cart[id]=cart[id]||0;
+    popularRow.innerHTML += popCardHTML(it,'🔥');
+  });
+}
+function renderGift(){
+  giftRow.innerHTML='';
+  GIFT_ITEMS.forEach(id=>{
+    const it = ITEM_INDEX[id]; if(!it) return;
+    cart[id]=cart[id]||0;
+    giftRow.innerHTML += miniCardHTML(it,'⭐');
+  });
+}
+
 renderPopular(); renderGift();
 renderCats(); renderProducts();
 
@@ -1205,6 +1238,13 @@ type='delivery';
 updateTotal();
 
 setTimeout(syncStickyHeight, 50);
+
+/* menu + search */
+function openTopMenu(){ closeSearch(); menuBackdrop.classList.add('show'); menuSheet.classList.add('show'); }
+function closeTopMenu(){ menuBackdrop.classList.remove('show'); menuSheet.classList.remove('show'); }
+
+/* route same as reviews link */
+function openRoute(){ try{ Telegram.WebApp.openLink(MAP_URL); }catch(_){ window.open(MAP_URL,'_blank'); } }
 
 /* search closed by default */
 closeSearch();
