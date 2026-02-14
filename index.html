@@ -80,15 +80,21 @@ body{
 /* ✅ классический шрифт для ARBA */
 .brand-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;transform: translateX(16px);}
 .brand-title{
-  font-family: "Georgia","Times New Roman",Times,serif;  /* ✅ классика */
+  font-family: "Georgia","Times New Roman",Times,serif;
   font-size:30px;
   line-height:1;
   letter-spacing:.5px;
   font-weight:800;
 }
-.brand-title2{font-family:'Montserrat',sans-serif;font-weight:900;font-size:18px;letter-spacing:2px;line-height:1.1;}
+/* ✅ уменьшили второй текст (RESTAURANT ISTANBUL) */
+.brand-title2{
+  font-family:'Montserrat',sans-serif;
+  font-weight:900;
+  font-size:14px;      /* ✅ было 18px */
+  letter-spacing:1.6px;/* ✅ было 2px */
+  line-height:1.15;
+}
 
-/* ✅ убрали слоган */
 .brand-slogan{display:none;}
 
 .brand-phone{position:relative; z-index:50; pointer-events:auto; margin-top:2px; display:flex; flex-direction:column; gap:2px;}
@@ -127,13 +133,18 @@ body{
 .act-ico{font-size:16px;line-height:1;color:#1b1b1b;}
 
 /* buttons */
-.langs,.types,.payments{display:flex;gap:12px;padding:12px;justify-content:center;flex-wrap:wrap;}
+.langs,.types,.payments{display:flex;gap:12px;padding:12px;justify-content:center;}
+/* ✅ язык в одну строку */
+.langs{flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:10px;}
+/* ✅ оплаты в один ряд */
+.payments{flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:10px;}
 .btn{
-  padding:12px 20px;border-radius:28px;font-weight:900;min-width:120px;text-align:center;
+  padding:12px 18px;border-radius:28px;font-weight:900;min-width:112px;text-align:center;
   cursor:pointer;transition:.15s;border:1px solid rgba(255,255,255,.28);
   background:#ffffff;
   color:#8B0E13;
   box-shadow: 0 10px 22px rgba(0,0,0,.18);
+  flex:0 0 auto;
 }
 .btn:active{transform:scale(.98);}
 .btn.active{
@@ -168,7 +179,7 @@ body{
 .img{height:170px;display:flex;align-items:center;justify-content:center;margin-bottom:6px;}
 .img img{max-width:150px;max-height:150px;object-fit:contain;transform:scale(1.06);transition:.15s;cursor:pointer;}
 
-.item-name{margin-top:2px;padding:0 6px;font-weight:900;line-height:1.15;min-height:34px;display:flex;align-items:center;justify-content:center;word-break:break-word;}
+.item-name{margin-top:2px;padding:0 6px;font-weight:900;line-height:1.15;min-height:40px;display:flex;align-items:center;justify-content:center;word-break:break-word;}
 .price{font-weight:900;color:#8B0E13;margin-top:6px;}
 .price small{font-weight:800;opacity:.75;margin-left:4px;}
 .counter{display:flex;justify-content:center;gap:10px;margin-top:8px;align-items:center;}
@@ -351,42 +362,40 @@ textarea.input{height:90px;}
 .menu-sub{font-size:12px;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
 .menu-right{opacity:.65;font-weight:900;}
 
-/* sheet подкатегорий */
-.cake-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.38);opacity:0;pointer-events:none;transition:.18s;z-index:1100;}
-.cake-backdrop.show{opacity:1;pointer-events:auto;}
-.cake-sheet{
-  position:fixed;left:0;right:0;bottom:-100%;
-  background:rgba(255,255,255,.94);
-  color:#1d1d1d;
-  border-top-left-radius:22px;border-top-right-radius:22px;border:1px solid rgba(255,255,255,.22);
-  box-shadow:0 18px 40px rgba(0,0,0,.22);
-  transition:.22s;z-index:1110;padding:10px 12px 14px;
-  max-height: 70vh;overflow:auto;-webkit-overflow-scrolling:touch;
+/* ✅ поиск — скрыт по умолчанию, появляется по нажатию */
+.search-title{
+  display:none;
+  width:100%;
+  padding:10px 14px 0;
+  font-weight:900;
+  color:var(--white);
 }
-.cake-sheet.show{bottom:0;}
-.cake-head{display:flex;align-items:center;justify-content:space-between;padding:2px 4px 10px;}
-.cake-head b{font-size:16px;}
-.cake-close{width:38px;height:38px;border:none;border-radius:12px;background:transparent;cursor:pointer;font-size:22px;line-height:1;color:#777;}
-.cake-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
+.search-title.show{display:block;}
+
+.search-wrap{
+  display:none;
+  position:relative;
+  padding:10px 12px 6px;
   gap:10px;
+  align-items:center;
 }
-.cake-tile{
+.search-wrap.show{display:flex;}
+.search-wrap .input{
+  width:100%;
+  margin:0;
+}
+.search-clear{
+  position:absolute;
+  right:20px;
+  top:50%;
+  transform:translateY(-50%);
+  width:32px;height:32px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.06);
   border:1px solid rgba(0,0,0,.08);
-  background:rgba(0,0,0,.03);
-  border-radius:18px;
-  padding:10px 8px;
   cursor:pointer;
-  text-align:center;
-  box-shadow: 0 10px 22px rgba(0,0,0,.12);
-}
-.cake-ic{font-size:20px;line-height:1;}
-.cake-lbl{font-weight:900;font-size:11.5px;line-height:1.15;margin-top:6px;word-break:break-word;}
-.cake-tile.active{
-  background:#8B0E13;
-  color:#fff;
-  border-color:rgba(255,255,255,.35);
+  color:#333;
+  font-weight:900;
 }
 
 /* ✅ онлайн-оплата блок */
@@ -402,15 +411,11 @@ textarea.input{height:90px;}
 .online-row{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:8px;}
 .online-label{font-weight:900;}
 .online-val{font-weight:900;color:#8B0E13;word-break:break-word;}
-.copy-btn{
-  min-width:auto;
-  padding:10px 14px;
-  border-radius:14px;
-}
+.copy-btn{min-width:auto;padding:10px 14px;border-radius:14px;}
 
 @media (max-width:420px){
   .brand-title{font-size:28px;}
-  .brand-title2{font-size:16px;}
+  .brand-title2{font-size:13px;}
   .brand-wrap{transform: translateX(10px);}
   .header{padding:14px 10px 24px;}
   .input{width:92%;}
@@ -420,9 +425,9 @@ textarea.input{height:90px;}
 @media (max-width:360px){
   .header img{width:76px;height:76px;left:10px;}
   .brand-title{font-size:26px;}
-  .brand-title2{font-size:15px;letter-spacing:1.6px;}
+  .brand-title2{font-size:12px;letter-spacing:1.3px;}
   .brand-phone a{font-size:13px;}
-  .btn{min-width:110px;padding:12px 16px;}
+  .btn{min-width:108px;padding:12px 16px;}
   .cat-btn{min-width:126px;padding:12px 16px;font-size:13px;}
 }
 </style>
@@ -435,10 +440,9 @@ textarea.input{height:90px;}
 
   <div class="brand-wrap">
     <div class="brand-title">ARBA</div>
-    <div class="brand-title2">ISTAMBUL RESTAURANT</div>
+    <div class="brand-title2">ISTANBUL RESTAURANT</div>
 
     <div class="brand-phone">
-      <!-- ✅ новые номера -->
       <a href="tel:+998662334499" onclick="callPhone(event)">+998 66 233 44 99</a>
       <a href="tel:+998935336067" onclick="callPhone2(event)">+998 93 533 60 67</a>
     </div>
@@ -553,36 +557,13 @@ textarea.input{height:90px;}
           </svg>
         </div>
         <div class="menu-txt">
-          <!-- ✅ новый @ -->
           <div class="menu-name" id="mInstaTitle">@arba_istanbul_restaurant01</div>
           <div class="menu-sub" id="mInstaSub">Открыть Instagram</div>
         </div>
       </div>
       <div class="menu-right">›</div>
     </a>
-
-    <div class="menu-item" onclick="toggleThemeFromMenu()" role="button">
-      <div class="menu-left">
-        <div class="menu-ic">🌓</div>
-        <div class="menu-txt">
-          <div class="menu-name" id="mThemeTitle">Тема</div>
-          <div class="menu-sub" id="themeMenuSub">Светлая</div>
-        </div>
-      </div>
-      <div class="menu-right" id="mThemeRight">›</div>
-    </div>
   </div>
-</div>
-
-<!-- sheet подкатегорий -->
-<div class="cake-backdrop" id="cakeBackdrop" onclick="closeCakeSubcats()"></div>
-<div class="cake-sheet" id="cakeSheet" aria-hidden="true">
-  <div class="menu-handle"></div>
-  <div class="cake-head">
-    <b id="cakeSheetTitle">Подкатегории</b>
-    <button class="cake-close" onclick="closeCakeSubcats()">×</button>
-  </div>
-  <div class="cake-grid" id="cakeGrid"></div>
 </div>
 
 <div class="search-title" id="searchTitle">Результаты поиска</div>
@@ -591,10 +572,12 @@ textarea.input{height:90px;}
   <div class="search-clear" onclick="clearSearch()" title="Очистить">✖</div>
 </div>
 
+<!-- ✅ языки в одну строку + добавили TR -->
 <div class="langs">
   <button class="btn active" onclick="setLang('ru',this)">RU</button>
   <button class="btn" onclick="setLang('uz',this)">UZ</button>
   <button class="btn" onclick="setLang('en',this)">EN</button>
+  <button class="btn" onclick="setLang('tr',this)">TR</button>
 </div>
 
 <div class="popular-wrap" id="popularWrap">
@@ -631,14 +614,13 @@ textarea.input{height:90px;}
 
   <textarea id="comment" class="input"></textarea>
 
+  <!-- ✅ оплаты в один ряд -->
   <div class="payments">
     <button class="btn active" id="payCash" onclick="setPayment('cash')"></button>
     <button class="btn" id="payClick" onclick="setPayment('click')"></button>
-    <!-- ✅ онлайн оплата -->
     <button class="btn" id="payOnline" onclick="setPayment('online')">💳 Онлайн</button>
   </div>
 
-  <!-- ✅ данные карты/получателя -->
   <div class="online-box" id="onlineBox">
     <div class="online-label">Получатель</div>
     <div class="online-row">
@@ -713,10 +695,10 @@ window.addEventListener('orientationchange', ()=>setTimeout(syncStickyHeight, 25
 const ADMIN_ID = 6013591658;
 const DELIVERY_FEE = 10000;
 
-/* ✅ новая геолокация (везде) */
+/* ✅ геолокация */
 const MAP_URL = "https://yandex.uz/maps/org/60749009354/?filter=alternate_vertical%3ARequestWindow&ll=66.950198%2C39.651845&mode=search&sctx=ZAAAAAgBEAAaKAoSCXHjFvNzvlBAETEnaJPD00NAEhIJR8Zq8%2F9SJkARnu488Zz9FEAiBgABAgMEBSgKOABAqwFIAWIkc25pcHBldF9leHBfbmFtZT1mdWxsb2JqZWN0cy8xLng6cmVmYiNzbmlwcGV0X2V4cF9uYW1lPXRvcG9iamVjdHMvMS54OnJlZmIec25pcHBldF9leHBfbmFtZT1nb29kcy8xLng6cmVmYidzbmlwcGV0X2V4cF9uYW1lPWdvb2RzX3JlZ2lzdGVyLzEueDpyZWZiC2ZyZXNobmVzcz0wYhdzb3VyY2U9YnVzaW5lc3M6ZXhwX3JlZmIVc291cmNlPXByaWNlczpleHBfcmVmagJ1ep0BzczMPaABAKgBAL0BByYCjMIBBsqjsafiAYICGEFyYmEgaXN0YW5idWwgcmVzdGF1cmFudIoCAJICBTExNTA4mgIMZGVza3RvcC1tYXBz&sll=66.950198%2C39.651845&sspn=0.043602%2C0.020502&text=Arba%20istanbul%20restaurant&z=15";
 
-/* ✅ новый instagram */
+/* ✅ instagram */
 const INSTA_URL = "https://www.instagram.com/arba_istanbul_restaurant01/";
 
 /* ✅ новые телефоны */
@@ -750,7 +732,7 @@ function copyText(t){
   }catch(_){}
 }
 
-/* UI */
+/* UI (добавили TR) */
 const UI = {
   ru:{
     menu:'Меню',
@@ -765,7 +747,6 @@ const UI = {
     legalChat:'💬 Чат с менеджером',
     callTitle:'Позвонить',
     instaSub:'Открыть Instagram',
-    theme:'Тема',
     searchResults:'Результаты поиска',
 
     popular:'🔥 Популярное',
@@ -786,8 +767,7 @@ const UI = {
     click:'💳 CLICK',
     online:'💳 Онлайн',
 
-    sum:'сум',
-    subcats:'Подкатегории'
+    sum:'сум'
   },
   uz:{
     menu:'Menyu',
@@ -802,7 +782,6 @@ const UI = {
     legalChat:'💬 Menejer bilan chat',
     callTitle:"Qo'ng'iroq qilish",
     instaSub:"Instagramni ochish",
-    theme:'Mavzu',
     searchResults:'Qidiruv natijalari',
 
     popular:'🔥 Ommabop',
@@ -823,8 +802,7 @@ const UI = {
     click:'💳 CLICK',
     online:'💳 Onlayn',
 
-    sum:"so‘m",
-    subcats:"Bo'limlar"
+    sum:"so‘m"
   },
   en:{
     menu:'Menu',
@@ -839,7 +817,6 @@ const UI = {
     legalChat:'💬 Chat with manager',
     callTitle:'Call',
     instaSub:'Open Instagram',
-    theme:'Theme',
     searchResults:'Search results',
 
     popular:'🔥 Popular',
@@ -860,41 +837,125 @@ const UI = {
     click:'💳 CLICK',
     online:'💳 Online',
 
-    sum:'sum',
-    subcats:'Subcategories'
+    sum:'sum'
+  },
+  tr:{
+    menu:'Menü',
+    reviewTitle:'Yorum bırak',
+    reviewSub:'Yandex puan / yorumlar',
+    reviewHint:"Eğer widget Telegram’da açılmıyorsa — aşağıdaki butonla yorumları açın.",
+    reviewOpen:'Yorumları aç',
+    legalTitle:'Tüzel kişiler için',
+    legalSub:'Sözleşme / fatura iletişim',
+    legalMail:'✉️ E-posta',
+    legalPhone:'📞 Telefon',
+    legalChat:'💬 Yöneticiyle sohbet',
+    callTitle:'Ara',
+    instaSub:'Instagram’ı aç',
+    searchResults:'Arama sonuçları',
+
+    popular:'🔥 Popüler',
+    new:'🆕 Yeni',
+    gift:'⭐ Önerilen',
+
+    delivery:'🚚 Teslimat',
+    pickup:'🏃 Gel-al',
+    address:'📍 Adres',
+    phone:'📞 Telefon',
+
+    cart:'🛒 Sepet',
+    total:'Toplam',
+    order:'Sipariş ver',
+    comment:'✍️ Not',
+
+    cash:'💵 Nakit',
+    click:'💳 CLICK',
+    online:'💳 Online',
+
+    sum:'sum'
   }
 };
 
-let lang='ru', category='meals', subcat='all', type='delivery', payment='cash', cart={};
+/* ✅ меню: заменили ВСЕ категории и блюда, фото .JPG (папка images) */
+let lang='ru', category='salads', type='delivery', payment='cash', cart={};
 
-/* меню (демо) */
 const MENU = {
-  meals:[
-    {id:'meal_kebab', p:45000, img:'images/meal_kebab.jpg', n:{ru:'Кебаб', uz:'Kebab', en:'Kebab'}},
-    {id:'meal_shawarma', p:35000, img:'images/meal_shawarma.jpg', n:{ru:'Шаурма', uz:'Shаurma', en:'Shawarma'}},
-    {id:'meal_pilaf', p:40000, img:'images/meal_pilaf.jpg', n:{ru:'Плов', uz:'Osh', en:'Pilaf'}},
-    {id:'meal_manti', p:38000, img:'images/meal_manti.jpg', n:{ru:'Манты', uz:'Manti', en:'Manti'}}
-  ],
   salads:[
-    {id:'salad_greek', p:30000, img:'images/salad_greek.jpg', n:{ru:'Греческий салат', uz:'Gretsiya salati', en:'Greek salad'}},
-    {id:'salad_caesar', p:32000, img:'images/salad_caesar.jpg', n:{ru:'Цезарь', uz:'Sezar', en:'Caesar'}},
+    {id:'salad_baklajon_yogurt', p:39000, img:'images/salad_baklajon_yogurt.jpg', n:{ru:'Баклажан с йогуртом', uz:'Baqlajon yogurt bilan', en:'Eggplant with yogurt', tr:'Yoğurtlu patlıcan'}},
+    {id:'salad_crispy_eggplant', p:71500, img:'images/salad_crispy_eggplant.jpg', n:{ru:'Салат из хрустящих баклажан', uz:'Qarsildoq baqlajon salati', en:'Crispy eggplant salad', tr:'Çıtır patlıcan salatası'}},
+    {id:'salad_greek', p:41600, img:'images/salad_greek.jpg', n:{ru:'Греческий', uz:'Gretsiya', en:'Greek', tr:'Yunan salatası'}},
+    {id:'salad_haydari', p:26000, img:'images/salad_haydari.jpg', n:{ru:'Хайдари', uz:'Haydari', en:'Haydari', tr:'Haydari'}},
+    {id:'salad_coban', p:39000, img:'images/salad_coban.jpg', n:{ru:'Чобан', uz:"Cho'bon", en:'Shepherd salad', tr:'Çoban salata'}},
+    {id:'salad_ezme', p:39000, img:'images/salad_ezme.jpg', n:{ru:'Эзма', uz:'Ezma', en:'Ezme', tr:'Ezme'}},
+    {id:'salad_vinegret', p:39000, img:'images/salad_vinegret.jpg', n:{ru:'Винегрет', uz:'Vinegret', en:'Vinaigrette', tr:'Vinegret'}}
   ],
-  drinks:[
-    {id:'dr_cola_05', p:8000, img:'images/dr_cola_05.jpg', n:{ru:'Coca Cola 0.5L', uz:'Coca Cola 0.5L', en:'Coca Cola 0.5L'}},
-    {id:'dr_fanta_05', p:8000, img:'images/dr_fanta_05.jpg', n:{ru:'Fanta 0.5L', uz:'Fanta 0.5L', en:'Fanta 0.5L'}},
-    {id:'dr_water_05', p:5000, img:'images/dr_water_05.jpg', n:{ru:'Вода 0.5L', uz:'Suv 0.5L', en:'Water 0.5L'}},
+  soups:[
+    {id:'soup_ezogelin', p:38900, img:'images/soup_ezogelin.jpg', n:{ru:'Эзогелин', uz:'Ezogelin', en:'Ezogelin soup', tr:'Ezogelin çorbası'}},
+    {id:'soup_lentil_cream', p:38900, img:'images/soup_lentil_cream.jpg', n:{ru:'Чечевичный крем суп', uz:"Moshli krem sho'rva", en:'Lentil cream soup', tr:'Mercimek krem çorbası'}}
+  ],
+  hot:[
+    {id:'hot_beydi_tandir', p:98800, img:'images/hot_beydi_tandir.jpg', n:{ru:'Бейди тандыр с соусом', uz:"Beydi tandir sous bilan", en:'Beydi tandir with sauce', tr:'Soslu Beyti tandır'}},
+    {id:'hot_dana_bonfile', p:162500, img:'images/hot_dana_bonfile.jpg', n:{ru:'Дана Бонфиле', uz:'Dana bonfile', en:'Beef bonfile', tr:'Dana bonfile'}},
+    {id:'hot_iskender_kebab', p:116900, img:'images/hot_iskender_kebab.jpg', n:{ru:'Искандар кебаб', uz:'Iskandar kebab', en:'Iskender kebab', tr:'İskender kebap'}},
+    {id:'hot_sac_tava', p:109200, img:'images/hot_sac_tava.jpg', n:{ru:'Сач тава', uz:"Sac tava", en:'Saç tava', tr:'Saç tava'}}
+  ],
+  pide:[
+    {id:'pide_lahmacun', p:40800, img:'images/pide_lahmacun.jpg', n:{ru:'Лахмаджун', uz:'Lahmajoun', en:'Lahmacun', tr:'Lahmacun'}},
+    {id:'pide_mix', p:102700, img:'images/pide_mix.jpg', n:{ru:'Микс Пиде', uz:'Miks pide', en:'Mix pide', tr:'Karışık pide'}},
+    {id:'pide_meat', p:91000, img:'images/pide_meat.jpg', n:{ru:'Мясное Пиде', uz:"Go'shtli pide", en:'Meat pide', tr:'Kıymalı pide'}},
+    {id:'pide_meat_cheese', p:102700, img:'images/pide_meat_cheese.jpg', n:{ru:'Мясное Пиде с сыром', uz:"Go'shtli pishloqli pide", en:'Meat pide with cheese', tr:'Peynirli kıymalı pide'}},
+    {id:'pide_sausage_cheese', p:96200, img:'images/pide_sausage_cheese.jpg', n:{ru:'Пиде колбасный с сыром', uz:"Kolbasali pishloqli pide", en:'Sausage pide with cheese', tr:'Sucuklu peynirli pide'}},
+    {id:'pide_cheese', p:78000, img:'images/pide_cheese.jpg', n:{ru:'Пиде с сыром', uz:"Pishloqli pide", en:'Cheese pide', tr:'Peynirli pide'}},
+    {id:'pide_yumurtali', p:83200, img:'images/pide_yumurtali.jpg', n:{ru:'Юмуртали Пиде', uz:"Tuxumli pide", en:'Egg pide', tr:'Yumurtalı pide'}},
+    {id:'pide_minced', p:85800, img:'images/pide_minced.jpg', n:{ru:'Пиде с фаршем', uz:"Qiyma pide", en:'Minced meat pide', tr:'Kıymalı pide'}}
+  ],
+  steak:[
+    {id:'steak_kasharli_kufte', p:94900, img:'images/steak_kasharli_kufte.jpg', n:{ru:'Кашарли кюфте', uz:"Kasharli ko'fte", en:'Kasharli köfte', tr:'Kaşarlı köfte'}},
+    {id:'steak_turkish_cutlet', p:91000, img:'images/steak_turkish_cutlet.jpg', n:{ru:'Котлетка по-Турецки', uz:"Turkcha kotlet", en:'Turkish cutlet', tr:'Türk usulü köfte'}},
+    {id:'steak_pirzola_lamb', p:149500, img:'images/steak_pirzola_lamb.jpg', n:{ru:'Пирзола баранина', uz:"Qo'y pirzola", en:'Lamb pirzola', tr:'Kuzu pirzola'}},
+    {id:'steak_pirzola_chicken', p:84500, img:'images/steak_pirzola_chicken.jpg', n:{ru:'Пирзола куриная', uz:"Tovuq pirzola", en:'Chicken pirzola', tr:'Tavuk pirzola'}}
+  ],
+  grill:[
+    {id:'grill_adana_kebab', p:96200, img:'images/grill_adana_kebab.jpg', n:{ru:'Адана кебаб', uz:'Adana kebab', en:'Adana kebab', tr:'Adana kebap'}},
+    {id:'grill_chicken_wings', p:81900, img:'images/grill_chicken_wings.jpg', n:{ru:'Куриные крылышки', uz:"Tovuq qanotlari", en:'Chicken wings', tr:'Tavuk kanat'}},
+    {id:'grill_chicken_shashlik', p:78000, img:'images/grill_chicken_shashlik.jpg', n:{ru:'Шашлык куриный', uz:"Tovuq shashlik", en:'Chicken shashlik', tr:'Tavuk şiş'}},
+    {id:'grill_urfa_kebab', p:91000, img:'images/grill_urfa_kebab.jpg', n:{ru:'Урфа кебаб', uz:'Urfa kebab', en:'Urfa kebab', tr:'Urfa kebap'}}
+  ],
+  pasta:[
+    {id:'pasta_spaghetti_beef', p:91000, img:'images/pasta_spaghetti_beef.jpg', n:{ru:'Спагетти с говядиной', uz:"Mol go'shtli spagetti", en:'Spaghetti with beef', tr:'Dana etli spagetti'}}
+  ],
+  cold_drinks:[
+    {id:'drink_bliss_juice', p:24700, img:'images/drink_bliss_juice.jpg', n:{ru:'Сок Bliss в асс-те', uz:'Bliss sharbat assorti', en:'Bliss juice (assorted)', tr:'Bliss meyve suyu (çeşit)'}},
+    {id:'drink_chortoq_05', p:19500, img:'images/drink_chortoq_05.jpg', n:{ru:'Chortoq 0.5l', uz:'Chortoq 0.5l', en:'Chortoq 0.5l', tr:'Chortoq 0.5l'}},
+    {id:'drink_chortoq_075', p:23400, img:'images/drink_chortoq_075.jpg', n:{ru:'Chortoq 0.75l', uz:'Chortoq 0.75l', en:'Chortoq 0.75l', tr:'Chortoq 0.75l'}},
+    {id:'drink_chortoq_033', p:15600, img:'images/drink_chortoq_033.jpg', n:{ru:'Chortoq 330l', uz:'Chortoq 330l', en:'Chortoq 330l', tr:'Chortoq 330l'}},
+    {id:'drink_cola_033', p:12900, img:'images/drink_cola_033.jpg', n:{ru:'Coca Cola 330l', uz:'Coca Cola 330l', en:'Coca Cola 330l', tr:'Coca Cola 330l'}},
+    {id:'drink_fanta_05', p:15600, img:'images/drink_fanta_05.jpg', n:{ru:'Fanta 0.5l', uz:'Fanta 0.5l', en:'Fanta 0.5l', tr:'Fanta 0.5l'}},
+    {id:'drink_cola_05', p:15600, img:'images/drink_cola_05.jpg', n:{ru:'Coca Cola 0.5l', uz:'Coca Cola 0.5l', en:'Coca Cola 0.5l', tr:'Coca Cola 0.5l'}},
+    {id:'drink_fanta_1', p:19500, img:'images/drink_fanta_1.jpg', n:{ru:'Fanta 1l', uz:'Fanta 1l', en:'Fanta 1l', tr:'Fanta 1l'}},
+    {id:'drink_cola_1', p:19500, img:'images/drink_cola_1.jpg', n:{ru:'Coca Cola 1l', uz:'Coca Cola 1l', en:'Coca Cola 1l', tr:'Coca Cola 1l'}},
+    {id:'drink_fanta_15', p:23400, img:'images/drink_fanta_15.jpg', n:{ru:'Fanta 1.5l', uz:'Fanta 1.5l', en:'Fanta 1.5l', tr:'Fanta 1.5l'}},
+    {id:'drink_cola_15', p:23400, img:'images/drink_cola_15.jpg', n:{ru:'Coca Cola 1.5l', uz:'Coca Cola 1.5l', en:'Coca Cola 1.5l', tr:'Coca Cola 1.5l'}},
+    {id:'drink_ayran_05', p:26000, img:'images/drink_ayran_05.jpg', n:{ru:'Айран 0.5l', uz:'Ayran 0.5l', en:'Ayran 0.5l', tr:'Ayran 0.5l'}},
+    {id:'drink_ayran_1', p:51900, img:'images/drink_ayran_1.jpg', n:{ru:'Айран 1l', uz:'Ayran 1l', en:'Ayran 1l', tr:'Ayran 1l'}},
+    {id:'drink_water_05', p:6500, img:'images/drink_water_05.jpg', n:{ru:'Вода 0.5l', uz:'Suv 0.5l', en:'Water 0.5l', tr:'Su 0.5l'}},
+    {id:'drink_water_spark_1', p:12900, img:'images/drink_water_spark_1.jpg', n:{ru:'Вода газированная 1l', uz:'Gazli suv 1l', en:'Sparkling water 1l', tr:'Maden suyu 1l'}},
+    {id:'drink_water_still_1', p:12900, img:'images/drink_water_still_1.jpg', n:{ru:'Вода не газированная 1l', uz:"Gazsiz suv 1l", en:'Still water 1l', tr:'Durgun su 1l'}},
+    {id:'drink_water_still_15', p:16900, img:'images/drink_water_still_15.jpg', n:{ru:'Вода не газированная 1.5l', uz:"Gazsiz suv 1.5l", en:'Still water 1.5l', tr:'Durgun su 1.5l'}}
   ]
 };
 
 const CATS = {
-  ru:{ meals:'🍽️ Горячее', salads:'🥗 Салаты', drinks:'🥤 Напитки' },
-  uz:{ meals:'🍽️ Issiq', salads:'🥗 Salatlar', drinks:'🥤 Ichimliklar' },
-  en:{ meals:'🍽️ Meals', salads:'🥗 Salads', drinks:'🥤 Drinks' }
+  ru:{ salads:'🥗 Салаты', soups:'🍲 Первые блюда', hot:'🍽️ Горячие блюда', pide:'🥙 Пиде', steak:'🥩 Стейк', grill:'🔥 Шашлык & Гриль', pasta:'🍝 Паста', cold_drinks:'🥤 Холодные напитки' },
+  uz:{ salads:'🥗 Salatlar', soups:"🍲 Birinchi taomlar", hot:"🍽️ Issiq taomlar", pide:'🥙 Pide', steak:'🥩 Steyk', grill:'🔥 Shashlik & Gril', pasta:'🍝 Pasta', cold_drinks:'🥤 Sovuq ichimliklar' },
+  en:{ salads:'🥗 Salads', soups:'🍲 Soups', hot:'🍽️ Hot meals', pide:'🥙 Pide', steak:'🥩 Steak', grill:'🔥 Grill', pasta:'🍝 Pasta', cold_drinks:'🥤 Cold drinks' },
+  tr:{ salads:'🥗 Salatalar', soups:'🍲 Çorbalar', hot:'🍽️ Sıcak yemekler', pide:'🥙 Pide', steak:'🥩 Steak', grill:'🔥 Izgara', pasta:'🍝 Makarna', cold_drinks:'🥤 Soğuk içecekler' }
 };
 
-const POPULAR = ['meal_kebab','salad_caesar','dr_cola_05'];
-const NEW_ITEMS = ['meal_shawarma','dr_water_05'];
-const GIFT_ITEMS = ['meal_pilaf','salad_greek'];
+/* витрины */
+const POPULAR = ['hot_iskender_kebab','grill_adana_kebab','pide_lahmacun'];
+const NEW_ITEMS = ['hot_sac_tava','salad_crispy_eggplant','drink_ayran_05'];
+const GIFT_ITEMS = ['hot_dana_bonfile','steak_pirzola_lamb','pide_mix'];
 
 const ITEM_INDEX = {};
 for (const c in MENU){ MENU[c].forEach(it => ITEM_INDEX[it.id]=it); }
@@ -926,7 +987,6 @@ function applyUI(){
 
   mCallTitle.innerText = UI[lang].callTitle;
   mInstaSub.innerText = UI[lang].instaSub;
-  mThemeTitle.innerText = UI[lang].theme;
 
   searchTitle.innerText = UI[lang].searchResults;
 
@@ -952,11 +1012,8 @@ function applyUI(){
   stickyCartBtn.innerText = UI[lang].cart;
   sumCurrency.innerText = UI[lang].sum;
 
-  cakeSheetTitle.innerText = UI[lang].subcats;
-
   renderCats();
-  renderCakeSubcatsGrid();
-  renderProducts();
+  if(!isSearchOpen()) renderProducts();  // ✅ не ломаем поиск
   renderPopular(); renderNew(); renderGift();
   updateTotal();
 
@@ -983,7 +1040,6 @@ function openMail(e){
   const url = "mailto:arba.restaurant@gmail.com";
   try{ Telegram.WebApp.openLink(url); }catch(_){ window.location.href = url; }
 }
-
 function toggleLegal(){
   const w = document.getElementById('legalWrap');
   w.style.display = (w.style.display==='none' || !w.style.display) ? 'block' : 'none';
@@ -998,7 +1054,9 @@ function toggleReviewWidget(){
   const w = document.getElementById('reviewWidgetWrap');
   w.style.display = (w.style.display==='none' || !w.style.display) ? 'block' : 'none';
 }
-const YANDEX_REVIEWS_URL="https://yandex.uz/maps/";
+/* ✅ новая ссылка на отзывы */
+const YANDEX_REVIEWS_URL="https://yandex.uz/maps/org/60749009354/?filter=alternate_vertical%3ARequestWindow&ll=66.941958%2C39.651845&mode=search&sctx=ZAAAAAgBEAAaKAoSCXHjFvNzvlBAETEnaJPD00NAEhIJR8Zq8%2F9SJkARnu488Zz9FEAiBgABAgMEBSgKOABAqwFIAWIkc25pcHBldF9leHBfbmFtZT1mdWxsb2JqZWN0cy8xLng6cmVmYiNzbmlwcGV0X2V4cF9uYW1lPXRvcG9iamVjdHMvMS54OnJlZmIec25pcHBldF9leHBfbmFtZT1nb29kcy8xLng6cmVmYidzbmlwcGV0X2V4cF9uYW1lPWdvb2RzX3JlZ2lzdGVyLzEueDpyZWZiC2ZyZXNobmVzcz0wYhdzb3VyY2U9YnVzaW5lc3M6ZXhwX3JlZmIVc291cmNlPXByaWNlczpleHBfcmVmagJ1ep0BzczMPaABAKgBAL0BByYCjMIBBsqjsafiAYICGEFyYmEgaXN0YW5idWwgcmVzdGF1cmFudIoCAJICBTExNTA4mgIMZGVza3RvcC1tYXBz&sll=66.950198%2C39.651845&sspn=0.043602%2C0.020502&text=Arba%20istanbul%20restaurant&z=15";
+
 function openYandexReviews(e){ try{e.preventDefault();e.stopPropagation();}catch(_){}
   try{Telegram.WebApp.openLink(YANDEX_REVIEWS_URL);}catch(_){window.open(YANDEX_REVIEWS_URL,'_blank');}
 }
@@ -1026,9 +1084,10 @@ function closeImgModal(e){
   imgModalImg.src = '';
 }
 
-/* search */
+/* ✅ поиск: открывается только по кнопке, и ищет по ВСЕМ блюдам */
 function isSearchOpen(){ return searchWrap.classList.contains('show'); }
 function toggleSearch(){ isSearchOpen()?closeSearch():openSearch(); }
+
 function openSearch(){
   searchWrap.classList.add('show');
   searchTitle.classList.add('show');
@@ -1045,18 +1104,34 @@ function closeSearch(){
 function clearSearch(){ closeSearch(); }
 function onSearchKey(e){ if(e.key === 'Enter') closeSearch(); }
 
+function matchesQuery(it, q){
+  if(!q) return true;
+  const allNames = [
+    it.n?.ru, it.n?.uz, it.n?.en, it.n?.tr,
+    String(it.id||'')
+  ].filter(Boolean).join(' ').toLowerCase();
+  return allNames.includes(q);
+}
+
 function searchProducts(){
   const q = (searchInput.value || '').trim().toLowerCase();
   products.innerHTML='';
   if(!q){ renderProducts(); return; }
+
+  let found = 0;
   for(let c in MENU){
     MENU[c].forEach(it=>{
-      const nm = (it.n && (it.n[lang]||it.n.ru)) ? String(it.n[lang]||it.n.ru).toLowerCase() : '';
-      if(nm.includes(q)){
+      if(matchesQuery(it, q)){
         cart[it.id]=cart[it.id]||0;
         products.innerHTML += cardHTML(it);
+        found++;
       }
     });
+  }
+  if(found === 0){
+    products.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:18px; font-weight:900; opacity:.9; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.18); border-radius:18px;">
+      ${lang==='ru'?'Ничего не найдено':lang==='uz'?'Hech narsa topilmadi':lang==='tr'?'Sonuç bulunamadı':'Nothing found'}
+    </div>`;
   }
 }
 
@@ -1159,9 +1234,8 @@ function chg(id,delta){
 /* categories */
 function onCategoryClick(k){
   category = k;
-  subcat = 'all';
   renderCats();
-  renderProducts();
+  if(!isSearchOpen()) renderProducts();
 }
 function renderCats(){
   cats.innerHTML='';
@@ -1169,26 +1243,6 @@ function renderCats(){
     cats.innerHTML += `<button class="btn cat-btn ${k===category?'active':''}" onclick="onCategoryClick('${k}')">${CATS[lang][k]||k}</button>`;
   }
 }
-
-/* subcats */
-const SUBCATS = [{key:'all', ic:'📌', t:{ru:'Все',uz:'Hammasi',en:'All'}}];
-function renderCakeSubcatsGrid(){
-  const grid = document.getElementById('cakeGrid');
-  if(!grid) return;
-  grid.innerHTML = '';
-  SUBCATS.forEach(sc=>{
-    const label = sc.t?.[lang] || sc.t?.ru || sc.key;
-    const active = (subcat===sc.key) ? 'active' : '';
-    grid.innerHTML += `
-      <div class="cake-tile ${active}" onclick="selectCakeSubcat('${sc.key}')">
-        <div class="cake-ic">${sc.ic}</div>
-        <div class="cake-lbl">${escapeHtml(label)}</div>
-      </div>`;
-  });
-}
-function openCakeSubcats(){ cakeBackdrop.classList.add('show'); cakeSheet.classList.add('show'); }
-function closeCakeSubcats(){ cakeBackdrop.classList.remove('show'); cakeSheet.classList.remove('show'); }
-function selectCakeSubcat(k){ subcat=k; renderCakeSubcatsGrid(); renderProducts(); closeCakeSubcats(); }
 
 function cardHTML(it){
   const id = it.id;
@@ -1262,7 +1316,7 @@ function sendOrder(){
   }
   if(items.length===0){
     popup.classList.remove('show');
-    alert(lang==='ru'?'Корзина пустая':lang==='uz'?"Savat bo‘sh":"Cart is empty");
+    alert(lang==='ru'?'Корзина пустая':lang==='uz'?"Savat bo‘sh":lang==='tr'?'Sepet boş':'Cart is empty');
     return;
   }
 
@@ -1284,7 +1338,7 @@ function sendOrder(){
     comment:comment.value,
     order_id: genOrderId(),
     lang,
-    brand:'ARBA ISTAMBUL RESTAURANT'
+    brand:'ARBA ISTANBUL RESTAURANT'
   };
 
   setTimeout(()=>{
@@ -1304,7 +1358,7 @@ applyTheme();
 
 /* init */
 renderPopular(); renderNew(); renderGift();
-renderCats(); renderCakeSubcatsGrid(); renderProducts();
+renderCats(); renderProducts();
 
 address.value = localStorage.getItem('arba_address') || '';
 phone.value = localStorage.getItem('arba_phone') || PHONE1_DISPLAY;
@@ -1326,6 +1380,59 @@ type='delivery';
 updateTotal();
 
 setTimeout(syncStickyHeight, 50);
+
+/* ✅ Важно: поиск закрыт по умолчанию */
+closeSearch();
 </script>
+
+<!-- ✅ Список JPG-файлов для папки /images (загрузи такие имена):
+salad_baklajon_yogurt.jpg
+salad_crispy_eggplant.jpg
+salad_greek.jpg
+salad_haydari.jpg
+salad_coban.jpg
+salad_ezme.jpg
+salad_vinegret.jpg
+soup_ezogelin.jpg
+soup_lentil_cream.jpg
+hot_beydi_tandir.jpg
+hot_dana_bonfile.jpg
+hot_iskender_kebab.jpg
+hot_sac_tava.jpg
+pide_lahmacun.jpg
+pide_mix.jpg
+pide_meat.jpg
+pide_meat_cheese.jpg
+pide_sausage_cheese.jpg
+pide_cheese.jpg
+pide_yumurtali.jpg
+pide_minced.jpg
+steak_kasharli_kufte.jpg
+steak_turkish_cutlet.jpg
+steak_pirzola_lamb.jpg
+steak_pirzola_chicken.jpg
+grill_adana_kebab.jpg
+grill_chicken_wings.jpg
+grill_chicken_shashlik.jpg
+grill_urfa_kebab.jpg
+pasta_spaghetti_beef.jpg
+drink_bliss_juice.jpg
+drink_chortoq_05.jpg
+drink_chortoq_075.jpg
+drink_chortoq_033.jpg
+drink_cola_033.jpg
+drink_fanta_05.jpg
+drink_cola_05.jpg
+drink_fanta_1.jpg
+drink_cola_1.jpg
+drink_fanta_15.jpg
+drink_cola_15.jpg
+drink_ayran_05.jpg
+drink_ayran_1.jpg
+drink_water_05.jpg
+drink_water_spark_1.jpg
+drink_water_still_1.jpg
+drink_water_still_15.jpg
+-->
 </body>
 </html>
