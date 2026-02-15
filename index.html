@@ -704,6 +704,12 @@ textarea.input{height:90px;}
   <div class="mini-row" id="giftRow"></div>
 </div>
 
+<!-- ✅ ДОБАВЛЕНО: Часто берут вместе (авто-рекомендации) -->
+<div class="popular-wrap" id="comboWrap" style="display:none;">
+  <div class="popular-title" id="comboTitle">🧠 Часто берут вместе</div>
+  <div class="mini-row" id="comboRow"></div>
+</div>
+
 <div class="types">
   <button class="btn" id="btnDelivery" onclick="setType('delivery',this)"></button>
   <button class="btn" id="btnPickup" onclick="setType('pickup',this)"></button>
@@ -942,6 +948,8 @@ const UI = {
     searchResults:'Результаты поиска',
     popular:'🔥 Популярное',
     gift:'⭐ Рекомендуем',
+    /* ✅ ДОБАВЛЕНО */
+    combo:'🧠 Часто берут вместе',
     delivery:'🚚 Доставка',
     pickup:'🏃 Самовывоз',
     address:'📍 Адрес доставки',
@@ -982,6 +990,8 @@ const UI = {
     searchResults:'Qidiruv natijalari',
     popular:'🔥 Ommabop',
     gift:'⭐ Tavsiya',
+    /* ✅ ДОБАВЛЕНО */
+    combo:'🧠 Ko‘p olinadi',
     delivery:'🚚 Yetkazish',
     pickup:'🏃 Olib ketish',
     address:'📍 Manzil',
@@ -1022,6 +1032,8 @@ const UI = {
     searchResults:'Search results',
     popular:'🔥 Popular',
     gift:'⭐ Recommended',
+    /* ✅ ДОБАВЛЕНО */
+    combo:'🧠 Often bought together',
     delivery:'🚚 Delivery',
     pickup:'🏃 Pickup',
     address:'📍 Address',
@@ -1062,6 +1074,8 @@ const UI = {
     searchResults:'Arama sonuçları',
     popular:'🔥 Popüler',
     gift:'⭐ Önerilen',
+    /* ✅ ДОБАВЛЕНО */
+    combo:'🧠 Sık birlikte alınır',
     delivery:'🚚 Teslimat',
     pickup:'🏃 Gel-al',
     address:'📍 Adres',
@@ -1168,6 +1182,10 @@ const GIFT_ITEMS = ['hot_dana_bonfile','steak_pirzola_lamb','pide_mix'];
 const ITEM_INDEX = {};
 for (const c in MENU){ MENU[c].forEach(it => ITEM_INDEX[it.id]=it); }
 
+/* ✅ ДОБАВЛЕНО: карта категории для каждого блюда */
+const ITEM_CAT = {};
+for (const c in MENU){ MENU[c].forEach(it => ITEM_CAT[it.id]=c); }
+
 /* helpers */
 function escapeHtml(s){return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
 function nameOf(id){const it = ITEM_INDEX[id]; return (it && it.n && (it.n[lang] || it.n.ru)) ? (it.n[lang] || it.n.ru) : id;}
@@ -1209,6 +1227,9 @@ function applyUI(){
   popularTitle.innerText = UI[lang].popular;
   giftTitle.innerText = UI[lang].gift;
 
+  /* ✅ ДОБАВЛЕНО */
+  comboTitle.innerText = UI[lang].combo;
+
   btnDelivery.innerText = UI[lang].delivery;
   btnPickup.innerText = UI[lang].pickup;
 
@@ -1244,6 +1265,9 @@ function applyUI(){
   renderCats();
   if(!isSearchOpen()) renderProducts();
   renderPopular(); renderGift();
+  /* ✅ ДОБАВЛЕНО */
+  renderCombo();
+
   updateTotal();
 
   setTimeout(syncStickyHeight, 50);
@@ -1404,6 +1428,93 @@ function renderGift(){
     giftRow.innerHTML += miniCardHTML(it,'⭐');
   });
 }
+
+/* ✅ ДОБАВЛЕНО: Часто берут вместе (авто) */
+function isAnyInCart(ids){
+  for(const id of ids){
+    if((cart[id]||0) > 0) return true;
+  }
+  return false;
+}
+function hasCategoryInCart(catName){
+  for(const id in cart){
+    if((cart[id]||0) > 0 && ITEM_CAT[id] === catName) return true;
+  }
+  return false;
+}
+function pickFirstExisting(ids){
+  for(const id of ids){
+    if(ITEM_INDEX[id]) return id;
+  }
+  return null;
+}
+function buildComboIds(){
+  const combo = [];
+
+  // 1) Если выбрали кебаб/гриль/искандер → предложить айран
+  const kebabIds = [
+    'hot_iskender_kebab',
+    'grill_adana_kebab','grill_urfa_kebab','grill_chicken_shashlik','grill_chicken_wings'
+  ];
+  const wantAyran = isAnyInCart(kebabIds) || hasCategoryInCart('grill') || hasCategoryInCart('hot');
+  if(wantAyran){
+    const ayran = pickFirstExisting(['drink_ayran_05','drink_ayran_1']);
+    if(ayran) combo.push(ayran);
+  }
+
+  // 2) Если заказали стейк → предложить салат
+  if(hasCategoryInCart('steak')){
+    const salad = pickFirstExisting(['salad_greek','salad_coban','salad_ezme','salad_haydari']);
+    if(salad) combo.push(salad);
+  }
+
+  // 3) Если заказали суп → предложить пиде
+  if(hasCategoryInCart('soups')){
+    const pide = pickFirstExisting(['pide_lahmacun','pide_cheese','pide_mix','pide_meat']);
+    if(pide) combo.push(pide);
+  }
+
+  // 4) Если заказали пиде → предложить напиток (cola/fanta/вода)
+  if(hasCategoryInCart('pide')){
+    const drink = pickFirstExisting(['drink_cola_05','drink_fanta_05','drink_water_05']);
+    if(drink) combo.push(drink);
+  }
+
+  // Убрать дубликаты и то, что уже есть в корзине
+  const uniq = [];
+  const seen = new Set();
+  for(const id of combo){
+    if(seen.has(id)) continue;
+    seen.add(id);
+    if((cart[id]||0) > 0) continue;
+    uniq.push(id);
+  }
+
+  return uniq.slice(0, 10);
+}
+function renderCombo(){
+  const wrap = document.getElementById('comboWrap');
+  const row  = document.getElementById('comboRow');
+  if(!wrap || !row) return;
+
+  const ids = buildComboIds();
+  if(ids.length === 0){
+    wrap.style.display = 'none';
+    row.innerHTML = '';
+    return;
+  }
+
+  wrap.style.display = 'block';
+  row.innerHTML = '';
+  ids.forEach(id=>{
+    const it = ITEM_INDEX[id]; if(!it) return;
+    cart[id]=cart[id]||0;
+    row.innerHTML += miniCardHTML(it,'🧠');
+  });
+
+  setTimeout(syncStickyHeight, 10);
+}
+
 function onCardClick(e,id){
   if(e?.target?.closest?.('button')) return;
   if(e?.target?.closest?.('.pop-img, .mini-img')) return;
@@ -1436,6 +1547,8 @@ function chg(id,delta){
   cart[id]=Math.max(0,(cart[id]||0)+delta);
   syncCounters(id);
   updateTotal();
+  /* ✅ ДОБАВЛЕНО */
+  renderCombo();
 }
 
 /* categories */
