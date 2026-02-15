@@ -540,6 +540,7 @@ textarea.input{height:90px;}
   </div>
 
   <div class="menu-list">
+    <!-- ✅ Оставить отзыв: УДАЛЕНО любое внешнее открытие (никаких ссылок на Kadima / другие места) -->
     <div class="menu-item" onclick="toggleReviewWidget()" role="button">
       <div class="menu-left">
         <div class="menu-ic">⭐</div>
@@ -565,7 +566,6 @@ textarea.input{height:90px;}
         Если виджет не открылся в Telegram — просто закройте меню.
       </div>
       <div style="display:flex; justify-content:center; margin-top:8px;">
-        <!-- ✅ КНОПКА ОТКРЫТЬ ОТЗЫВЫ УДАЛЕНА (ссылки нет) -->
         <button class="btn" style="min-width:auto; padding:10px 14px;" type="button" onclick="event.preventDefault();event.stopPropagation();closeTopMenu();" id="mReviewOpenBtn">
           OK
         </button>
@@ -760,10 +760,10 @@ function syncStickyHeight(){
 window.addEventListener('resize', ()=>setTimeout(syncStickyHeight, 50), {passive:true});
 window.addEventListener('orientationchange', ()=>setTimeout(syncStickyHeight, 250), {passive:true});
 
-/* ✅ ссылка отзывов (удалили ссылку полностью — только виджет остается) */
+/* ✅ ВАЖНО: НИКАКИХ ссылок в "Оставить отзыв" — убрали полностью */
 const YANDEX_REVIEWS_URL = "";
 
-/* ✅ геолокация (в шапке) оставляем как было у тебя */
+/* ✅ геолокация (в шапке) */
 const MAP_URL = "https://yandex.uz/maps/org/60749009354/?filter=alternate_vertical%3ARequestWindow&ll=66.950198%2C39.651845&mode=search&sctx=ZAAAAAgBEAAaKAoSCfBrJAnCu1BAEdOHLqhv00NAEhIJDJQUWABTpj8ReqcC7nn%2BlD8iBgABAgMEBSgKOABA3lBIAWIkc25pcHBldF9leHBfbmFtZT1mdWxsb2JqZWN0cy8xLng6cmVmYiNzbmlwcGV0X2V4cF9uYW1lPXRvcG9iamVjdHMvMS54OnJlZmIec25pcHBldF9leHBfbmFtZT1nb29kcy8xLng6cmVmYidzbmlwcGV0X2V4cF9uYW1lPWdvb2RzX3JlZ2lzdGVyLzEueDpyZWZiC2ZyZXNobmVzcz0wYhdzb3VyY2U9YnVzaW5lc3M6ZXhwX3JlZmIVc291cmNlPXByaWNlczpleHBfcmVmagJ1ep0BzczMPaABAKgBAL0BByYCjMIBBsqjsafiAYICGEFyYmEgaXN0YW5idWwgcmVzdGF1cmFudIoCAJICBTExNTA4mgIMZGVza3RvcC1tYXBz&sll=66.950198%2C39.651845&sspn=0.043602%2C0.020502&text=Arba%20istanbul%20restaurant&z=15";
 
 const INSTA_URL = "https://www.instagram.com/arba_istanbul_restaurant01/";
@@ -793,9 +793,7 @@ const tg_id = tgUser.id || "";
 /* splash */
 let splashTimer = null;
 function showSplash(){
-  try{
-    splashImg.src = SPLASH_IMG;
-  }catch(_){}
+  try{ splashImg.src = SPLASH_IMG; }catch(_){}
   const el = document.getElementById('splash');
   if(!el) return;
   el.classList.add('show');
@@ -1026,7 +1024,6 @@ function toggleReviewWidget(){
 /* ✅ ссылка удалена — функция оставлена, но ничего не делает */
 function openYandexReviews(e){
   try{e.preventDefault();e.stopPropagation();}catch(_){}
-  // ссылка удалена
   return;
 }
 function openInstagram(e){
@@ -1162,7 +1159,7 @@ function calcItemsSum(){
   for(const id in cart) s += (cart[id]||0) * (ITEM_INDEX[id]?.p||0);
   return s;
 }
-function calcDeliveryFee(){ return 0; } /* ✅ всегда 0 */
+function calcDeliveryFee(){ return 0; }
 function updateTotal(){
   const itemsSum=calcItemsSum();
   const dfee=calcDeliveryFee();
@@ -1227,7 +1224,6 @@ function setPayment(p){
   payCash.classList.toggle('active', p==='cash');
   payClick.classList.toggle('active', p==='click');
   payOnline.classList.toggle('active', p==='online');
-
   onlineBox.style.display = (p==='online') ? 'block' : 'none';
   clickBox.style.display  = (p==='click')  ? 'block' : 'none';
 }
