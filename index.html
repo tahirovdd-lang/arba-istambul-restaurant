@@ -185,7 +185,8 @@ body{
   color:#1d1d1d;
 }
 .img{height:170px;display:flex;align-items:center;justify-content:center;margin-bottom:6px;}
-.img img{max-width:150px;max-height:150px;object-fit:contain;transform:scale(1.06);cursor:pointer;}
+/* ✅ фото блюд закругленные */
+.img img{max-width:150px;max-height:150px;object-fit:cover;transform:scale(1.06);cursor:pointer;border-radius:18px;}
 .item-name{margin-top:2px;padding:0 6px;font-weight:900;line-height:1.15;min-height:42px;display:flex;align-items:center;justify-content:center;word-break:break-word;}
 .price{font-weight:900;color:#8B0E13;margin-top:6px;}
 .price small{font-weight:800;opacity:.75;margin-left:4px;}
@@ -210,7 +211,8 @@ body{
   color:#1d1d1d;
 }
 .pop-img,.mini-img{height:86px;border-radius:18px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:rgba(139,14,19,.10);cursor:pointer;}
-.pop-img img,.mini-img img{width:100%;height:100%;object-fit:cover;}
+/* ✅ фото в каруселях закругленные */
+.pop-img img,.mini-img img{width:100%;height:100%;object-fit:cover;border-radius:18px;}
 .pop-name{font-weight:900;margin-top:8px;}
 .pop-price,.mini-price{font-weight:900;color:#8B0E13;margin-top:4px;}
 .pop-badge,.mini-badge{position:absolute;left:10px;top:10px;font-size:18px;pointer-events:none;}
@@ -383,6 +385,34 @@ textarea.input{height:90px;}
 .online-label{font-weight:900;}
 .online-val{font-weight:900;color:#8B0E13;word-break:break-word;}
 
+/* ✅ CLICK QR block (показывается при выборе CLICK) */
+.click-box{
+  display:none;
+  margin:10px auto 0;
+  width:85%;
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:18px;
+  background:rgba(0,0,0,.03);
+  padding:12px;
+}
+.click-title{font-weight:900;margin-bottom:8px;}
+.click-qr{
+  width:100%;
+  border-radius:18px;
+  overflow:hidden;
+  border:1px solid rgba(0,0,0,.08);
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.click-qr img{
+  width:100%;
+  max-width:360px;
+  height:auto;
+  display:block;
+}
+
 @media (max-width:420px){
   .brand-title{font-size:28px;}
   .brand-title2{font-size:13px;}
@@ -391,6 +421,7 @@ textarea.input{height:90px;}
   .input{width:92%;}
   .products{gap:14px;}
   .online-box{width:92%;}
+  .click-box{width:92%;}
 }
 @media (max-width:360px){
   .header img{width:76px;height:76px;left:10px;}
@@ -590,6 +621,17 @@ textarea.input{height:90px;}
     <button class="btn" id="payOnline" onclick="setPayment('online')">💳 Онлайн</button>
   </div>
 
+  <!-- ✅ CLICK QR (показывается при выборе CLICK) -->
+  <div class="click-box" id="clickBox">
+    <div class="click-title" id="clickTitle">CLICK QR</div>
+    <div class="click-qr">
+      <img id="clickQrImg" src="images/qr_click.jpg" alt="CLICK QR" onerror="this.onerror=null;this.src='images/logo.png'">
+    </div>
+    <div style="margin-top:8px; font-size:12px; opacity:.75;" id="clickHint">
+      Отсканируйте QR в приложении CLICK, затем нажмите «Оформить заказ».
+    </div>
+  </div>
+
   <div class="online-box" id="onlineBox">
     <div class="online-label" id="recipLabel">Получатель</div>
     <div class="online-row">
@@ -656,6 +698,7 @@ window.addEventListener('orientationchange', ()=>setTimeout(syncStickyHeight, 25
 /* ✅ одинаковая ссылка для геолокации и отзывов */
 const YANDEX_LINK = "https://yandex.uz/maps/org/60749009354/?filter=alternate_vertical%3ARequestWindow&ll=66.950198%2C39.651845&mode=search&sctx=ZAAAAAgBEAAaKAoSCfBrJAnCu1BAEdOHLqhv00NAEhIJDJQUWABTpj8ReqcC7nn%2BlD8iBgABAgMEBSgKOABA3lBIAWIkc25pcHBldF9leHBfbmFtZT1mdWxsb2JqZWN0cy8xLng6cmVmYiNzbmlwcGV0X2V4cF9uYW1lPXRvcG9iamVjdHMvMS54OnJlZmIec25pcHBldF9leHBfbmFtZT1nb29kcy8xLng6cmVmYidzbmlwcGV0X2V4cF9uYW1lPWdvb2RzX3JlZ2lzdGVyLzEueDpyZWZiC2ZyZXNobmVzcz0wYhdzb3VyY2U9YnVzaW5lc3M6ZXhwX3JlZmIVc291cmNlPXByaWNlczpleHBfcmVmagJ1ep0BzczMPaABAKgBAL0BByYCjMIBBsqjsafiAYICGEFyYmEgaXN0YW5idWwgcmVzdGF1cmFudIoCAJICBTExNTA4mgIMZGVza3RvcC1tYXBz&sll=66.950198%2C39.651845&sspn=0.043602%2C0.020502&text=Arba%20istanbul%20restaurant&z=15";
 const MAP_URL = YANDEX_LINK;
+/* ✅ отзыв = та же ссылка что и геолокация */
 const YANDEX_REVIEWS_URL = YANDEX_LINK;
 
 const INSTA_URL = "https://www.instagram.com/arba_istanbul_restaurant01/";
@@ -663,6 +706,9 @@ const ADMIN_ID = 6013591658;
 
 /* ✅ доставка НЕ добавляется автоматически */
 const DELIVERY_FEE = 0;
+
+/* ✅ название файла QR для CLICK (загрузи в images/) */
+const CLICK_QR_IMG = "images/qr_click.jpg"; // <-- JPG файл
 
 /* phones */
 const PHONE1_DISPLAY = "+998 66 233 44 99";
@@ -697,10 +743,10 @@ function copyText(t){
 
 /* UI translations */
 const UI = {
-  ru:{menu:'Меню',reviewTitle:'Оставить отзыв',reviewSub:'Яндекс рейтинг / отзывы',reviewHint:'Если виджет не открылся в Telegram — откройте отзывы через кнопку ниже.',reviewOpen:'Открыть отзывы',legalTitle:'Юридическим лицам',legalSub:'Контакты для договоров / счетов',legalMail:'✉️ Почта',legalPhone:'📞 Телефон',legalChat:'💬 Чат с менеджером',callTitle:'Позвонить',instaSub:'Открыть Instagram',searchResults:'Результаты поиска',popular:'🔥 Популярное',gift:'⭐ Рекомендуем',delivery:'🚚 Доставка',pickup:'🏃 Самовывоз',address:'📍 Адрес доставки',phone:'📞 Телефон',cart:'🛒 Корзина',total:'Итого',order:'Оформить заказ',comment:'✍️ Комментарий к заказу',cash:'💵 Наличные',click:'💳 CLICK',online:'💳 Онлайн',sum:'сум',recip:'Получатель',card:'Карта',copy:'Копировать',onlineHint:'После оплаты нажмите «Оформить заказ» и напишите в комментарии “Оплатил(а)”.',empty:'Корзина пустая'},
-  uz:{menu:'Menyu',reviewTitle:'Fikr qoldirish',reviewSub:'Yandex reyting / fikrlar',reviewHint:"Agar vidjet Telegramda ochilmasa — pastdagi tugma orqali fikrlarni oching.",reviewOpen:"Fikrlarni ochish",legalTitle:'Yuridik shaxslar',legalSub:"Shartnoma / hisob uchun kontaktlar",legalMail:'✉️ Pochta',legalPhone:'📞 Telefon',legalChat:'💬 Menejer bilan chat',callTitle:"Qo'ng'iroq qilish",instaSub:"Instagramni ochish",searchResults:'Qidiruv natijalari',popular:'🔥 Ommabop',gift:'⭐ Tavsiya',delivery:'🚚 Yetkazish',pickup:'🏃 Olib ketish',address:'📍 Manzil',phone:'📞 Telefon',cart:'🛒 Savat',total:'Jami',order:'Buyurtma berish',comment:'✍️ Izoh',cash:'💵 Naqd',click:'💳 CLICK',online:'💳 Onlayn',sum:"so‘m",recip:'Qabul qiluvchi',card:'Karta',copy:'Nusxa',onlineHint:'To‘lovdan so‘ng “Buyurtma berish”ni bosing va izohga “To‘ladim” deb yozing.',empty:"Savat bo‘sh"},
-  en:{menu:'Menu',reviewTitle:'Leave a review',reviewSub:'Yandex rating / reviews',reviewHint:"If the widget doesn't open in Telegram — open reviews using the button below.",reviewOpen:'Open reviews',legalTitle:'For legal entities',legalSub:'Contacts for contracts / invoices',legalMail:'✉️ Email',legalPhone:'📞 Phone',legalChat:'💬 Chat with manager',callTitle:'Call',instaSub:'Open Instagram',searchResults:'Search results',popular:'🔥 Popular',gift:'⭐ Recommended',delivery:'🚚 Delivery',pickup:'🏃 Pickup',address:'📍 Address',phone:'📞 Phone',cart:'🛒 Cart',total:'Total',order:'Place order',comment:'✍️ Comment',cash:'💵 Cash',click:'💳 CLICK',online:'💳 Online',sum:'sum',recip:'Recipient',card:'Card',copy:'Copy',onlineHint:'After payment press “Place order” and write “Paid” in comment.',empty:'Cart is empty'},
-  tr:{menu:'Menü',reviewTitle:'Yorum bırak',reviewSub:'Yandex puan / yorumlar',reviewHint:"Eğer widget Telegram’da açılmıyorsa — aşağıdaki butonla yorumları açın.",reviewOpen:'Yorumları aç',legalTitle:'Tüzel kişiler için',legalSub:'Sözleşme / fatura iletişim',legalMail:'✉️ E-posta',legalPhone:'📞 Telefon',legalChat:'💬 Yöneticiyle sohbet',callTitle:'Ara',instaSub:"Instagram’ı aç",searchResults:'Arama sonuçları',popular:'🔥 Popüler',gift:'⭐ Önerilen',delivery:'🚚 Teslimat',pickup:'🏃 Gel-al',address:'📍 Adres',phone:'📞 Telefon',cart:'🛒 Sepet',total:'Toplam',order:'Sipariş ver',comment:'✍️ Not',cash:'💵 Nakit',click:'💳 CLICK',online:'💳 Online',sum:'sum',recip:'Alıcı',card:'Kart',copy:'Kopyala',onlineHint:'Ödemeden sonra “Sipariş ver”e basın ve nota “Ödedim” yazın.',empty:'Sepet boş'}
+  ru:{menu:'Меню',reviewTitle:'Оставить отзыв',reviewSub:'Яндекс рейтинг / отзывы',reviewHint:'Если виджет не открылся в Telegram — откройте отзывы через кнопку ниже.',reviewOpen:'Открыть отзывы',legalTitle:'Юридическим лицам',legalSub:'Контакты для договоров / счетов',legalMail:'✉️ Почта',legalPhone:'📞 Телефон',legalChat:'💬 Чат с менеджером',callTitle:'Позвонить',instaSub:'Открыть Instagram',searchResults:'Результаты поиска',popular:'🔥 Популярное',gift:'⭐ Рекомендуем',delivery:'🚚 Доставка',pickup:'🏃 Самовывоз',address:'📍 Адрес доставки',phone:'📞 Телефон',cart:'🛒 Корзина',total:'Итого',order:'Оформить заказ',comment:'✍️ Комментарий к заказу',cash:'💵 Наличные',click:'💳 CLICK',online:'💳 Онлайн',sum:'сум',recip:'Получатель',card:'Карта',copy:'Копировать',onlineHint:'После оплаты нажмите «Оформить заказ» и напишите в комментарии “Оплатил(а)”.',empty:'Корзина пустая',clickTitle:'CLICK QR',clickHint:'Отсканируйте QR в приложении CLICK, затем нажмите «Оформить заказ».'},
+  uz:{menu:'Menyu',reviewTitle:'Fikr qoldirish',reviewSub:'Yandex reyting / fikrlar',reviewHint:"Agar vidjet Telegramda ochilmasa — pastdagi tugma orqali fikrlarni oching.",reviewOpen:"Fikrlarni ochish",legalTitle:'Yuridik shaxslar',legalSub:"Shartnoma / hisob uchun kontaktlar",legalMail:'✉️ Pochta',legalPhone:'📞 Telefon',legalChat:'💬 Menejer bilan chat',callTitle:"Qo'ng'iroq qilish",instaSub:"Instagramni ochish",searchResults:'Qidiruv natijalari',popular:'🔥 Ommabop',gift:'⭐ Tavsiya',delivery:'🚚 Yetkazish',pickup:'🏃 Olib ketish',address:'📍 Manzil',phone:'📞 Telefon',cart:'🛒 Savat',total:'Jami',order:'Buyurtma berish',comment:'✍️ Izoh',cash:'💵 Naqd',click:'💳 CLICK',online:'💳 Onlayn',sum:"so‘m",recip:'Qabul qiluvchi',card:'Karta',copy:'Nusxa',onlineHint:'To‘lovdan so‘ng “Buyurtma berish”ni bosing va izohga “To‘ladim” deb yozing.',empty:"Savat bo‘sh",clickTitle:'CLICK QR',clickHint:"CLICK ilovasida QR ni skaner qiling, so‘ng “Buyurtma berish”ni bosing."},
+  en:{menu:'Menu',reviewTitle:'Leave a review',reviewSub:'Yandex rating / reviews',reviewHint:"If the widget doesn't open in Telegram — open reviews using the button below.",reviewOpen:'Open reviews',legalTitle:'For legal entities',legalSub:'Contacts for contracts / invoices',legalMail:'✉️ Email',legalPhone:'📞 Phone',legalChat:'💬 Chat with manager',callTitle:'Call',instaSub:'Open Instagram',searchResults:'Search results',popular:'🔥 Popular',gift:'⭐ Recommended',delivery:'🚚 Delivery',pickup:'🏃 Pickup',address:'📍 Address',phone:'📞 Phone',cart:'🛒 Cart',total:'Total',order:'Place order',comment:'✍️ Comment',cash:'💵 Cash',click:'💳 CLICK',online:'💳 Online',sum:'sum',recip:'Recipient',card:'Card',copy:'Copy',onlineHint:'After payment press “Place order” and write “Paid” in comment.',empty:'Cart is empty',clickTitle:'CLICK QR',clickHint:'Scan the QR in CLICK app, then press “Place order”.'},
+  tr:{menu:'Menü',reviewTitle:'Yorum bırak',reviewSub:'Yandex puan / yorumlar',reviewHint:"Eğer widget Telegram’da açılmıyorsa — aşağıdaki butonla yorumları açın.",reviewOpen:'Yorumları aç',legalTitle:'Tüzel kişiler için',legalSub:'Sözleşme / fatura iletişim',legalMail:'✉️ E-posta',legalPhone:'📞 Telefon',legalChat:'💬 Yöneticiyle sohbet',callTitle:'Ara',instaSub:"Instagram’ı aç",searchResults:'Arama sonuçları',popular:'🔥 Popüler',gift:'⭐ Önerilen',delivery:'🚚 Teslimat',pickup:'🏃 Gel-al',address:'📍 Adres',phone:'📞 Telefon',cart:'🛒 Sepet',total:'Toplam',order:'Sipariş ver',comment:'✍️ Not',cash:'💵 Nakit',click:'💳 CLICK',online:'💳 Online',sum:'sum',recip:'Alıcı',card:'Kart',copy:'Kopyala',onlineHint:'Ödemeden sonra “Sipariş ver”e basın ve nota “Ödedim” yazın.',empty:'Sepet boş',clickTitle:'CLICK QR',clickHint:"CLICK uygulamasında QR’ı okutun, sonra “Sipariş ver”e basın."}
 };
 
 let lang='ru', category='salads', type='delivery', payment='cash', cart={};
@@ -829,6 +875,10 @@ function applyUI(){
   payClick.innerText = UI[lang].click;
   payOnline.innerText = UI[lang].online;
 
+  // click block texts
+  clickTitle.innerText = UI[lang].clickTitle;
+  clickHint.innerText = UI[lang].clickHint;
+
   sumCurrency.innerText = UI[lang].sum;
   sumWord.innerText = UI[lang].sum;
   sumWord2.innerText = UI[lang].sum;
@@ -840,6 +890,9 @@ function applyUI(){
   onlineHint.innerText = UI[lang].onlineHint;
 
   stickyCartBtn.innerText = UI[lang].cart;
+
+  // ensure click QR image path
+  clickQrImg.src = CLICK_QR_IMG;
 
   renderCats();
   if(!isSearchOpen()) renderProducts();
@@ -1082,7 +1135,10 @@ function setPayment(p){
   payCash.classList.toggle('active', p==='cash');
   payClick.classList.toggle('active', p==='click');
   payOnline.classList.toggle('active', p==='online');
+
+  // ✅ показываем блоки оплаты
   onlineBox.style.display = (p==='online') ? 'block' : 'none';
+  clickBox.style.display  = (p==='click')  ? 'block' : 'none';
 }
 function openCart(){
   const el=document.getElementById('cartBox');
