@@ -578,10 +578,10 @@ textarea.input{height:90px;}
 
 <!-- ✅ языки в 1 ряд + флаги -->
 <div class="langs">
-  <button class="btn active" onclick="setLang('ru',this)"><span class="lang-flag">🇷🇺</span>RU</button>
-  <button class="btn" onclick="setLang('uz',this)"><span class="lang-flag">🇺🇿</span>UZ</button>
-  <button class="btn" onclick="setLang('en',this)"><span class="lang-flag">🇬🇧</span>EN</button>
-  <button class="btn" onclick="setLang('tr',this)"><span class="lang-flag">🇹🇷</span>TR</button>
+  <button class="btn" id="langRU" onclick="setLang('ru',this)"><span class="lang-flag">🇷🇺</span>RU</button>
+  <button class="btn" id="langUZ" onclick="setLang('uz',this)"><span class="lang-flag">🇺🇿</span>UZ</button>
+  <button class="btn" id="langEN" onclick="setLang('en',this)"><span class="lang-flag">🇬🇧</span>EN</button>
+  <button class="btn" id="langTR" onclick="setLang('tr',this)"><span class="lang-flag">🇹🇷</span>TR</button>
 </div>
 
 <!-- ✅ Новинки удалены -->
@@ -596,7 +596,7 @@ textarea.input{height:90px;}
 </div>
 
 <div class="types">
-  <button class="btn active" id="btnDelivery" onclick="setType('delivery',this)"></button>
+  <button class="btn" id="btnDelivery" onclick="setType('delivery',this)"></button>
   <button class="btn" id="btnPickup" onclick="setType('pickup',this)"></button>
 </div>
 
@@ -695,11 +695,11 @@ function syncStickyHeight(){
 window.addEventListener('resize', ()=>setTimeout(syncStickyHeight, 50), {passive:true});
 window.addEventListener('orientationchange', ()=>setTimeout(syncStickyHeight, 250), {passive:true});
 
-/* ✅ одинаковая ссылка для геолокации и отзывов */
-const YANDEX_LINK = "https://yandex.uz/maps/org/60749009354/?filter=alternate_vertical%3ARequestWindow&ll=66.950198%2C39.651845&mode=search&sctx=ZAAAAAgBEAAaKAoSCfBrJAnCu1BAEdOHLqhv00NAEhIJDJQUWABTpj8ReqcC7nn%2BlD8iBgABAgMEBSgKOABA3lBIAWIkc25pcHBldF9leHBfbmFtZT1mdWxsb2JqZWN0cy8xLng6cmVmYiNzbmlwcGV0X2V4cF9uYW1lPXRvcG9iamVjdHMvMS54OnJlZmIec25pcHBldF9leHBfbmFtZT1nb29kcy8xLng6cmVmYidzbmlwcGV0X2V4cF9uYW1lPWdvb2RzX3JlZ2lzdGVyLzEueDpyZWZiC2ZyZXNobmVzcz0wYhdzb3VyY2U9YnVzaW5lc3M6ZXhwX3JlZmIVc291cmNlPXByaWNlczpleHBfcmVmagJ1ep0BzczMPaABAKgBAL0BByYCjMIBBsqjsafiAYICGEFyYmEgaXN0YW5idWwgcmVzdGF1cmFudIoCAJICBTExNTA4mgIMZGVza3RvcC1tYXBz&sll=66.950198%2C39.651845&sspn=0.043602%2C0.020502&text=Arba%20istanbul%20restaurant&z=15";
-const MAP_URL = YANDEX_LINK;
-/* ✅ отзыв = та же ссылка что и геолокация */
-const YANDEX_REVIEWS_URL = YANDEX_LINK;
+/* ✅ ссылка отзывов (в бургер-меню) */
+const YANDEX_REVIEWS_URL = "https://yandex.uz/maps/org/60749009354/?filter=alternate_vertical%3ARequestWindow&ll=66.941958%2C39.651845&mode=search&sctx=ZAAAAAgBEAAaKAoSCfBrJAnCu1BAEdOHLqhv00NAEhIJDJQUWABTpj8ReqcC7nn%2BlD8iBgABAgMEBSgKOABA3lBIAWIkc25pcHBldF9leHBfbmFtZT1mdWxsb2JqZWN0cy8xLng6cmVmYiNzbmlwcGV0X2V4cF9uYW1lPXRvcG9iamVjdHMvMS54OnJlZmIec25pcHBldF9leHBfbmFtZT1nb29kcy8xLng6cmVmYidzbmlwcGV0X2V4cF9uYW1lPWdvb2RzX3JlZ2lzdGVyLzEueDpyZWZiC2ZyZXNobmVzcz0wYhdzb3VyY2U9YnVzaW5lc3M6ZXhwX3JlZmIVc291cmNlPXByaWNlczpleHBfcmVmagJ1ep0BzczMPaABAKgBAL0BByYCjMIBBsqjsafiAYICGEFyYmEgaXN0YW5idWwgcmVzdGF1cmFudIoCAJICBTExNTA4mgIMZGVza3RvcC1tYXBz&sll=66.950198%2C39.651845&sspn=0.043602%2C0.020502&text=Arba%20istanbul%20restaurant&z=15";
+
+/* ✅ геолокация (в шапке) оставляем как было у тебя */
+const MAP_URL = "https://yandex.uz/maps/org/60749009354/?filter=alternate_vertical%3ARequestWindow&ll=66.950198%2C39.651845&mode=search&sctx=ZAAAAAgBEAAaKAoSCfBrJAnCu1BAEdOHLqhv00NAEhIJDJQUWABTpj8ReqcC7nn%2BlD8iBgABAgMEBSgKOABA3lBIAWIkc25pcHBldF9leHBfbmFtZT1mdWxsb2JqZWN0cy8xLng6cmVmYiNzbmlwcGV0X2V4cF9uYW1lPXRvcG9iamVjdHMvMS54OnJlZmIec25pcHBldF9leHBfbmFtZT1nb29kcy8xLng6cmVmYidzbmlwcGV0X2V4cF9uYW1lPWdvb2RzX3JlZ2lzdGVyLzEueDpyZWZiC2ZyZXNobmVzcz0wYhdzb3VyY2U9YnVzaW5lc3M6ZXhwX3JlZmIVc291cmNlPXByaWNlczpleHBfcmVmagJ1ep0BzczMPaABAKgBAL0BByYCjMIBBsqjsafiAYICGEFyYmEgaXN0YW5idWwgcmVzdGF1cmFudIoCAJICBTExNTA4mgIMZGVza3RvcC1tYXBz&sll=66.950198%2C39.651845&sspn=0.043602%2C0.020502&text=Arba%20istanbul%20restaurant&z=15";
 
 const INSTA_URL = "https://www.instagram.com/arba_istanbul_restaurant01/";
 const ADMIN_ID = 6013591658;
@@ -749,7 +749,7 @@ const UI = {
   tr:{menu:'Menü',reviewTitle:'Yorum bırak',reviewSub:'Yandex puan / yorumlar',reviewHint:"Eğer widget Telegram’da açılmıyorsa — aşağıdaki butonla yorumları açın.",reviewOpen:'Yorumları aç',legalTitle:'Tüzel kişiler için',legalSub:'Sözleşme / fatura iletişim',legalMail:'✉️ E-posta',legalPhone:'📞 Telefon',legalChat:'💬 Yöneticiyle sohbet',callTitle:'Ara',instaSub:"Instagram’ı aç",searchResults:'Arama sonuçları',popular:'🔥 Popüler',gift:'⭐ Önerilen',delivery:'🚚 Teslimat',pickup:'🏃 Gel-al',address:'📍 Adres',phone:'📞 Telefon',cart:'🛒 Sepet',total:'Toplam',order:'Sipariş ver',comment:'✍️ Not',cash:'💵 Nakit',click:'💳 CLICK',online:'💳 Online',sum:'sum',recip:'Alıcı',card:'Kart',copy:'Kopyala',onlineHint:'Ödemeden sonra “Sipariş ver”e basın ve nota “Ödedim” yazın.',empty:'Sepet boş',clickTitle:'CLICK QR',clickHint:"CLICK uygulamasında QR’ı okutun, sonra “Sipariş ver”e basın."}
 };
 
-let lang='ru', category='salads', type='delivery', payment='cash', cart={};
+let lang='uz', category='salads', type='pickup', payment='cash', cart={};
 
 /* ✅ ВОССТАНОВЛЕНО: ВСЕ категории и все блюда */
 const MENU = {
@@ -1222,13 +1222,25 @@ function setLang(l,btn){
 /* start state */
 renderPopular(); renderGift();
 renderCats(); renderProducts();
+
+/* ✅ старт: узбекский + самовывоз */
 applyUI();
 setPayment('cash');
-type='delivery';
-btnDelivery.classList.add('active');
-btnPickup.classList.remove('active');
-updateTotal();
 
+/* выставляем самовывоз */
+type='pickup';
+btnPickup.classList.add('active');
+btnDelivery.classList.remove('active');
+address.style.display='none';
+
+/* выставляем язык uz (и подсветку кнопки) */
+lang='uz';
+document.querySelectorAll('.langs .btn').forEach(b=>b.classList.remove('active'));
+const uzBtn = document.getElementById('langUZ');
+if(uzBtn) uzBtn.classList.add('active');
+applyUI();
+
+updateTotal();
 setTimeout(syncStickyHeight, 50);
 
 /* search закрыт по умолчанию */
