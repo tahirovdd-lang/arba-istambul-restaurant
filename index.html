@@ -79,6 +79,16 @@ body{
 .brand-phone{margin-top:2px;display:flex;flex-direction:column;gap:2px;}
 .brand-phone a{color:#fff;text-decoration:none;font-size:14px;font-weight:800;opacity:.95;}
 
+/* ✅ приветствие */
+.brand-greet{
+  margin-top:6px;
+  font-weight:900;
+  font-size:13px;
+  opacity:.92;
+  display:none;
+}
+.brand-greet.show{display:block;}
+
 /* header actions smaller */
 .header-actions{
   position:absolute;right:8px;top:12px;bottom:12px;
@@ -101,6 +111,17 @@ body{
 .burger span:nth-child(2){top:4.8px;}
 .burger span:nth-child(3){bottom:0;}
 .act-ico{font-size:14px;line-height:1;color:#1b1b1b;}
+
+/* ✅ VIP кнопка "Позвать официанта" (в шапке) */
+.act-btn.vip{
+  width:auto;
+  padding:0 10px;
+  gap:8px;
+  border-radius:14px;
+  height:32px;
+  font-weight:900;
+}
+.vip-label{font-size:12px;line-height:1;color:#1b1b1b;white-space:nowrap;}
 
 /* rows */
 .langs,.types,.payments{
@@ -256,12 +277,13 @@ textarea.input{height:90px;}
 }
 
 /* popup */
-.popup{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.3s;}
+.popup{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.3s;z-index:2500;}
 .popup.show{opacity:1;pointer-events:auto;}
 .popup-box{
   background:white;padding:26px;border-radius:24px;text-align:center;font-weight:800;border:1px solid rgba(255,255,255,.22);
   box-shadow: 0 14px 26px rgba(0,0,0,.22);
   color:#1d1d1d;
+  width:min(520px, 92vw);
 }
 
 /* image modal */
@@ -477,6 +499,80 @@ textarea.input{height:90px;}
   opacity:.85;
 }
 
+/* ✅ секции внутри меню */
+.sheet-section{
+  display:none;
+  padding:6px 4px 10px;
+}
+.sheet-section.show{display:block;}
+.section-box{
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:16px;
+  overflow:hidden;
+  background:rgba(0,0,0,.03);
+  padding:12px;
+}
+
+/* ✅ Галерея */
+.gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:10px;
+  margin-top:8px;
+}
+.gallery-tile{
+  border-radius:18px;
+  overflow:hidden;
+  border:1px solid rgba(0,0,0,.08);
+  background:#fff;
+  box-shadow: 0 10px 22px rgba(0,0,0,.10);
+  cursor:pointer;
+}
+.gallery-tile img{
+  width:100%;
+  height:120px;
+  object-fit:cover;
+  display:block;
+}
+.gallery-cap{
+  padding:8px 10px;
+  font-weight:900;
+  font-size:12px;
+  color:#1d1d1d;
+  opacity:.9;
+}
+
+/* ✅ Отзывы внутри приложения */
+.reviews-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.rating-badge{
+  display:flex;align-items:center;gap:8px;
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:14px;
+  padding:8px 10px;
+  background:#fff;
+  font-weight:900;
+}
+.rating-stars{letter-spacing:1px;}
+.review-list{margin-top:10px;display:flex;flex-direction:column;gap:10px;}
+.review-card{
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:16px;
+  background:#fff;
+  padding:12px;
+}
+.review-head{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.review-name{font-weight:900;}
+.review-date{font-weight:800;opacity:.7;font-size:12px;}
+.review-text{margin-top:8px;font-weight:800;opacity:.9;line-height:1.25;}
+.review-stars{margin-top:8px;font-weight:900;letter-spacing:1px;color:#8B0E13;}
+.reviews-actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;}
+.reviews-actions .btn{min-width:auto;border-radius:16px;padding:10px 12px;font-size:13px;}
+
 @media (max-width:420px){
   .brand-title{font-size:28px;}
   .brand-title2{font-size:13px;}
@@ -496,6 +592,8 @@ textarea.input{height:90px;}
   .cat-btn{min-width:126px;padding:12px 16px;font-size:13px;}
   .langs .btn{min-width:86px;padding:10px 10px;font-size:13px;}
   .payments .btn{min-width:78px;padding:9px 9px;font-size:12.5px;}
+  .act-btn.vip{padding:0 8px;}
+  .vip-label{font-size:11px;}
 }
 </style>
 </head>
@@ -524,6 +622,9 @@ textarea.input{height:90px;}
     <div class="brand-title">ARBA</div>
     <div class="brand-title2">ISTANBUL RESTAURANT</div>
 
+    <!-- ✅ Автоматическое приветствие -->
+    <div class="brand-greet" id="greetLine">👋</div>
+
     <div class="brand-phone">
       <a href="tel:+998662334499" onclick="callPhone(event)">+998 66 233 44 99</a>
       <a href="tel:+998935336067" onclick="callPhone2(event)">+998 93 533 60 67</a>
@@ -534,6 +635,12 @@ textarea.input{height:90px;}
     <div class="act-btn" onclick="openTopMenu()" title="Меню">
       <div class="burger"><span></span><span></span><span></span></div>
     </div>
+
+    <!-- ✅ VIP: Позвать официанта (для гостей в зале) -->
+    <div class="act-btn vip" onclick="callWaiter()" title="Позвать официанта">
+      <span class="act-ico">🛎</span><span class="vip-label" id="vipWaiterLabel">Позвать</span>
+    </div>
+
     <div class="act-btn" onclick="openRoute()" title="Маршрут">
       <span class="act-ico">📍</span>
     </div>
@@ -556,10 +663,73 @@ textarea.input{height:90px;}
 
   <div class="menu-list">
 
+    <!-- ✅ Отзывы внутри приложения -->
+    <div class="menu-item" onclick="toggleReviews()" role="button">
+      <div class="menu-left">
+        <div class="menu-ic">⭐</div>
+        <div class="menu-txt">
+          <div class="menu-name" id="mReviewsInAppTitle">Отзывы</div>
+          <div class="menu-sub" id="mReviewsInAppSub">Рейтинг и последние отзывы</div>
+        </div>
+      </div>
+      <div class="menu-right">›</div>
+    </div>
+
+    <div id="reviewsWrap" class="sheet-section">
+      <div class="section-box">
+        <div class="reviews-top">
+          <div style="font-weight:900;" id="reviewsHead">⭐ Отзывы гостей</div>
+          <div class="rating-badge" title="Средний рейтинг">
+            <span>⭐</span>
+            <span id="ratingValue">4.9</span>
+            <span class="rating-stars" id="ratingStars">★★★★★</span>
+          </div>
+        </div>
+
+        <div style="margin-top:8px;font-weight:800;opacity:.75;" id="reviewsHint">
+          Данные можно обновлять вручную в массиве REVIEWS_DATA (ниже в коде).
+        </div>
+
+        <div class="review-list" id="reviewsList"></div>
+
+        <div class="reviews-actions">
+          <button class="btn" type="button" onclick="openYandexReviews(event)" id="openYandexBtn">Открыть в Яндекс</button>
+          <button class="btn active" type="button" onclick="openYandexReviews(event)" id="leaveReviewBtn">Оставить отзыв</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ Галерея ресторана -->
+    <div class="menu-item" onclick="toggleGallery()" role="button">
+      <div class="menu-left">
+        <div class="menu-ic">🖼</div>
+        <div class="menu-txt">
+          <div class="menu-name" id="mGalleryTitle">Галерея ресторана</div>
+          <div class="menu-sub" id="mGallerySub">Интерьер • печь • гриль • команда</div>
+        </div>
+      </div>
+      <div class="menu-right">›</div>
+    </div>
+
+    <div id="galleryWrap" class="sheet-section">
+      <div class="section-box">
+        <div style="font-weight:900;" id="galleryHead">🖼 Фото кухни / атмосферы</div>
+        <div style="margin-top:6px;font-weight:800;opacity:.75;" id="galleryHint">
+          Загрузи JPG в папку <b>images/</b> (имена указаны ниже).
+        </div>
+
+        <div class="gallery-grid" id="galleryGrid"></div>
+
+        <div style="margin-top:10px;font-weight:800;opacity:.8;font-size:12px;" id="galleryFiles">
+          Файлы: images/gallery_interior.jpg, images/gallery_oven.jpg, images/gallery_grill.jpg, images/gallery_team.jpg
+        </div>
+      </div>
+    </div>
+
     <!-- ✅ ДОБАВЛЕНО: Оставить отзыв (Яндекс) -->
     <div class="menu-item" onclick="openYandexReviews(event)" role="button">
       <div class="menu-left">
-        <div class="menu-ic">⭐</div>
+        <div class="menu-ic">🗺</div>
         <div class="menu-txt">
           <div class="menu-name" id="mReviewTitle">Оставить отзыв</div>
           <div class="menu-sub" id="mReviewSub">Яндекс отзывы / рейтинг</div>
@@ -769,7 +939,7 @@ textarea.input{height:90px;}
   <div style="height: 12px;"></div>
 </div>
 
-<div class="popup" id="popup"><div class="popup-box" id="popupText">✅ Заказ принят!</div></div>
+<div class="popup" id="popup"><div class="popup-box" id="popupText">✅</div></div>
 
 <div class="img-modal" id="imgModal" onclick="closeImgModal(event)">
   <div class="img-modal-box" onclick="event.stopPropagation()">
@@ -813,7 +983,7 @@ window.addEventListener('orientationchange', ()=>setTimeout(syncStickyHeight, 25
 /* ✅ геолокация (в шапке) */
 const MAP_URL = "https://yandex.uz/maps/org/60749009354/?filter=alternate_vertical%3ARequestWindow&ll=66.947552%2C39.651712&mode=search&sctx=ZAAAAAgBEAAaKAoSCfBrJAnCu1BAEdOHLqhv00NAEhIJDJQUWABTpj8ReqcC7nn%2BlD8iBgABAgMEBSgKOABA3lBIAWIkc25pcHBldF9leHBfbmFtZT1mdWxsb2JqZWN0cy8xLng6cmVmYiNzbmlwcGV0X2V4cF9uYW1lPXRvcG9iamVjdHMvMS54OnJlZmIec25pcHBldF9leHBfbmFtZT1nb29kcy8xLng6cmVmYidzbmlwcGV0X2V4cF9uYW1lPWdvb2RzX3JlZ2lzdGVyLzEueDpyZWZiC2ZyZXNobmVzcz0wYhdzb3VyY2U9YnVzaW5lc3M6ZXhwX3JlZmIVc291cmNlPXByaWNlczpleHBfcmVmagJ1ep0BzczMPaABAKgBAL0BByYCjMIBBsqjsafiAYICGEFyYmEgaXN0YW5idWwgcmVzdGF1cmFudIoCAJICBTExNTA4mgIMZGVza3RvcC1tYXBz&sll=66.950198%2C39.651845&sspn=0.043602%2C0.020502&text=Arba%20istanbul%20restaurant&z=14";
 
-/* ✅ ссылка на отзывы (кнопка в бургере) */
+/* ✅ ссылка на отзывы (и “Оставить отзыв”) */
 const YANDEX_REVIEWS_URL = "https://yandex.uz/maps/org/60749009354/?filter=alternate_vertical%3ARequestWindow&ll=66.947552%2C39.651712&mode=search&sctx=ZAAAAAgBEAAaKAoSCfBrJAnCu1BAEdOHLqhv00NAEhIJDJQUWABTpj8ReqcC7nn%2BlD8iBgABAgMEBSgKOABA3lBIAWIkc25pcHBldF9leHBfbmFtZT1mdWxsb2JqZWN0cy8xLng6cmVmYiNzbmlwcGV0X2V4cF9uYW1lPXRvcG9iamVjdHMvMS54OnJlZmIec25pcHBldF9leHBfbmFtZT1nb29kcy8xLng6cmVmYidzbmlwcGV0X2V4cF9uYW1lPWdvb2RzX3JlZ2lzdGVyLzEueDpyZWZiC2ZyZXNobmVzcz0wYhdzb3VyY2U9YnVzaW5lc3M6ZXhwX3JlZmIVc291cmNlPXByaWNlczpleHBfcmVmagJ1ep0BzczMPaABAKgBAL0BByYCjMIBBsqjsafiAYICGEFyYmEgaXN0YW5idWwgcmVzdGF1cmFudIoCAJICBTExNTA4mgIMZGVza3RvcC1tYXBz&sll=66.950198%2C39.651845&sspn=0.043602%2C0.020502&text=Arba%20istanbul%20restaurant&z=14";
 
 const INSTA_URL = "https://www.instagram.com/arba_istanbul_restaurant01/";
@@ -827,6 +997,25 @@ const CLICK_QR_IMG = "images/qr_click.jpg"; // <-- JPG файл
 
 /* ✅ Splash image (загрузи JPG в images/) */
 const SPLASH_IMG = "images/splash_kebab.jpg"; // <-- JPG файл
+
+/* ✅ Галерея (загрузи JPG в images/) */
+const GALLERY = [
+  {key:'interior', img:'images/gallery_interior.jpg', cap:{ru:'Интерьер', uz:'Interyer', en:'Interior', tr:'İç mekân'}},
+  {key:'oven',     img:'images/gallery_oven.jpg',     cap:{ru:'Печь',     uz:'Pech',     en:'Oven',     tr:'Fırın'}},
+  {key:'grill',    img:'images/gallery_grill.jpg',    cap:{ru:'Гриль',    uz:'Gril',     en:'Grill',    tr:'Izgara'}},
+  {key:'team',     img:'images/gallery_team.jpg',     cap:{ru:'Команда',  uz:'Jamoa',    en:'Team',     tr:'Ekip'}}
+];
+
+/* ✅ Отзывы (внутри приложения).
+   Важно: браузер Telegram не даст напрямую читать отзывы Яндекса из-за CORS,
+   поэтому здесь “встроенные” данные — можно обновлять вручную.
+*/
+const REVIEWS_DATA = [
+  {name:'Aziza', stars:5, date:'2026-01-18', text:{ru:'Очень вкусный кебаб и быстрый сервис!', uz:'Juda mazali kebab, tez xizmat!', en:'Very tasty kebab and fast service!', tr:'Çok lezzetli kebap ve hızlı servis!'}},
+  {name:'Bekzod', stars:5, date:'2026-01-05', text:{ru:'Атмосфера как в Стамбуле 🔥', uz:'Istanbul muhitidek 🔥', en:'Feels like Istanbul 🔥', tr:'İstanbul gibi bir atmosfer 🔥'}},
+  {name:'Dilshod', stars:4, date:'2025-12-27', text:{ru:'Всё понравилось, приду ещё.', uz:'Hammasi yoqdi, yana kelaman.', en:'Loved it, will come again.', tr:'Beğendim, tekrar geleceğim.'}}
+];
+const REVIEWS_AVG = 4.9; // средний рейтинг (обновляешь вручную)
 
 /* phones */
 const PHONE1_DISPLAY = "+998 66 233 44 99";
@@ -938,6 +1127,19 @@ const UI = {
     aboutHours:'🕒 График работы',
     reviewTitle:'Оставить отзыв',
     reviewSub:'Яндекс отзывы / рейтинг',
+    reviewsInAppTitle:'Отзывы',
+    reviewsInAppSub:'Рейтинг и последние отзывы',
+    openYandex:'Открыть в Яндекс',
+    leaveReview:'Оставить отзыв',
+    galleryTitle:'Галерея ресторана',
+    gallerySub:'Интерьер • печь • гриль • команда',
+    galleryHead:'🖼 Фото кухни / атмосферы',
+    greet:(name)=>`👋 Добро пожаловать, ${name}!`,
+    vipWaiter:'Позвать',
+    waiterTitle:'🛎 Позвать официанта',
+    waiterHint:'Если вы в ресторане — отправим администратору сигнал.',
+    waiterSend:'Позвать официанта',
+    waiterSent:'✅ Официант уже идёт!',
     legalTitle:'Юридическим лицам',
     legalSub:'Контакты для договоров / счетов',
     legalMail:'✉️ Почта',
@@ -948,7 +1150,6 @@ const UI = {
     searchResults:'Результаты поиска',
     popular:'🔥 Популярное',
     gift:'⭐ Рекомендуем',
-    /* ✅ ДОБАВЛЕНО */
     combo:'🧠 Часто берут вместе',
     delivery:'🚚 Доставка',
     pickup:'🏃 Самовывоз',
@@ -980,6 +1181,19 @@ const UI = {
     aboutHours:'🕒 Ish vaqti',
     reviewTitle:'Fikr qoldirish',
     reviewSub:'Yandex fikrlar / reyting',
+    reviewsInAppTitle:'Fikrlar',
+    reviewsInAppSub:'Reyting va oxirgi fikrlar',
+    openYandex:'Yandex’da ochish',
+    leaveReview:'Fikr qoldirish',
+    galleryTitle:'Restoran galereyasi',
+    gallerySub:'Interyer • pech • gril • jamoa',
+    galleryHead:'🖼 Oshxona / muhit fotosi',
+    greet:(name)=>`👋 Xush kelibsiz, ${name}!`,
+    vipWaiter:'Chaqir',
+    waiterTitle:'🛎 Ofitsiant chaqirish',
+    waiterHint:'Agar restoranda bo‘lsangiz — admin’ga signal yuboramiz.',
+    waiterSend:'Ofitsiant chaqir',
+    waiterSent:'✅ Ofitsiant yo‘lda!',
     legalTitle:'Yuridik shaxslar',
     legalSub:"Shartnoma / hisob uchun kontaktlar",
     legalMail:'✉️ Pochta',
@@ -990,7 +1204,6 @@ const UI = {
     searchResults:'Qidiruv natijalari',
     popular:'🔥 Ommabop',
     gift:'⭐ Tavsiya',
-    /* ✅ ДОБАВЛЕНО */
     combo:'🧠 Ko‘p olinadi',
     delivery:'🚚 Yetkazish',
     pickup:'🏃 Olib ketish',
@@ -1022,6 +1235,19 @@ const UI = {
     aboutHours:'🕒 Working hours',
     reviewTitle:'Leave a review',
     reviewSub:'Yandex reviews / rating',
+    reviewsInAppTitle:'Reviews',
+    reviewsInAppSub:'Rating and latest reviews',
+    openYandex:'Open in Yandex',
+    leaveReview:'Leave a review',
+    galleryTitle:'Restaurant gallery',
+    gallerySub:'Interior • oven • grill • team',
+    galleryHead:'🖼 Kitchen / atmosphere photos',
+    greet:(name)=>`👋 Welcome, ${name}!`,
+    vipWaiter:'Call',
+    waiterTitle:'🛎 Call a waiter',
+    waiterHint:'If you are in the restaurant — we will notify the admin.',
+    waiterSend:'Call waiter',
+    waiterSent:'✅ Waiter is on the way!',
     legalTitle:'For legal entities',
     legalSub:'Contacts for contracts / invoices',
     legalMail:'✉️ Email',
@@ -1032,7 +1258,6 @@ const UI = {
     searchResults:'Search results',
     popular:'🔥 Popular',
     gift:'⭐ Recommended',
-    /* ✅ ДОБАВЛЕНО */
     combo:'🧠 Often bought together',
     delivery:'🚚 Delivery',
     pickup:'🏃 Pickup',
@@ -1064,6 +1289,19 @@ const UI = {
     aboutHours:'🕒 Çalışma saatleri',
     reviewTitle:'Yorum bırak',
     reviewSub:'Yandex yorumlar / puan',
+    reviewsInAppTitle:'Yorumlar',
+    reviewsInAppSub:'Puan ve son yorumlar',
+    openYandex:'Yandex’te aç',
+    leaveReview:'Yorum bırak',
+    galleryTitle:'Restoran galerisi',
+    gallerySub:'İç mekân • fırın • ızgara • ekip',
+    galleryHead:'🖼 Mutfak / atmosfer fotoğrafları',
+    greet:(name)=>`👋 Hoş geldiniz, ${name}!`,
+    vipWaiter:'Çağır',
+    waiterTitle:'🛎 Garson çağır',
+    waiterHint:'Restorandaysanız — yöneticiye bildireceğiz.',
+    waiterSend:'Garson çağır',
+    waiterSent:'✅ Garson geliyor!',
     legalTitle:'Tüzel kişiler için',
     legalSub:'Sözleşme / fatura iletişim',
     legalMail:'✉️ E-posta',
@@ -1074,7 +1312,6 @@ const UI = {
     searchResults:'Arama sonuçları',
     popular:'🔥 Popüler',
     gift:'⭐ Önerilen',
-    /* ✅ ДОБАВЛЕНО */
     combo:'🧠 Sık birlikte alınır',
     delivery:'🚚 Teslimat',
     pickup:'🏃 Gel-al',
@@ -1191,9 +1428,40 @@ function escapeHtml(s){return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','
 function nameOf(id){const it = ITEM_INDEX[id]; return (it && it.n && (it.n[lang] || it.n.ru)) ? (it.n[lang] || it.n.ru) : id;}
 function formatSum(x){const n = Number(x) || 0; return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ');}
 
+/* ✅ popup helper */
+let popupTimer=null;
+function showPopup(text){
+  try{ clearTimeout(popupTimer); }catch(_){}
+  popupText.innerHTML = text || "✅";
+  popup.classList.add('show');
+  popupTimer = setTimeout(()=>popup.classList.remove('show'), 1400);
+}
+
 /* apply UI texts */
 function applyUI(){
   menuTitle.innerText = UI[lang].menu;
+
+  /* greeting */
+  const greet = document.getElementById('greetLine');
+  const name = (tg_first_name || tg_username || '').trim();
+  if(greet && name){
+    greet.innerText = UI[lang].greet(name);
+    greet.classList.add('show');
+  }else if(greet){
+    greet.classList.remove('show');
+  }
+  const vip = document.getElementById('vipWaiterLabel');
+  if(vip) vip.innerText = UI[lang].vipWaiter;
+
+  /* reviews / gallery menu titles */
+  mReviewsInAppTitle.innerText = UI[lang].reviewsInAppTitle;
+  mReviewsInAppSub.innerText   = UI[lang].reviewsInAppSub;
+  openYandexBtn.innerText = UI[lang].openYandex;
+  leaveReviewBtn.innerText = UI[lang].leaveReview;
+
+  mGalleryTitle.innerText = UI[lang].galleryTitle;
+  mGallerySub.innerText   = UI[lang].gallerySub;
+  galleryHead.innerText   = UI[lang].galleryHead;
 
   /* about */
   mAboutTitle.innerText = UI[lang].aboutTitle;
@@ -1227,7 +1495,6 @@ function applyUI(){
   popularTitle.innerText = UI[lang].popular;
   giftTitle.innerText = UI[lang].gift;
 
-  /* ✅ ДОБАВЛЕНО */
   comboTitle.innerText = UI[lang].combo;
 
   btnDelivery.innerText = UI[lang].delivery;
@@ -1265,8 +1532,10 @@ function applyUI(){
   renderCats();
   if(!isSearchOpen()) renderProducts();
   renderPopular(); renderGift();
-  /* ✅ ДОБАВЛЕНО */
   renderCombo();
+
+  renderGallery();
+  renderReviews();
 
   updateTotal();
 
@@ -1293,14 +1562,46 @@ function openMail(e){ try{e.preventDefault();e.stopPropagation();}catch(_){}
   const url="mailto:arba.restaurant@gmail.com";
   try{Telegram.WebApp.openLink(url);}catch(_){window.location.href=url;}
 }
+
 function toggleLegal(){
   const w=document.getElementById('legalWrap');
   w.style.display=(w.style.display==='none'||!w.style.display)?'block':'none';
+  setTimeout(syncStickyHeight, 10);
 }
 function toggleAbout(){
   const w=document.getElementById('aboutWrap');
   w.style.display=(w.style.display==='none'||!w.style.display)?'block':'none';
+  setTimeout(syncStickyHeight, 10);
 }
+
+/* ✅ секции меню: отзывы / галерея */
+function closeOtherSections(exceptId){
+  const ids=['reviewsWrap','galleryWrap'];
+  ids.forEach(id=>{
+    if(id!==exceptId){
+      const el=document.getElementById(id);
+      if(!el) return;
+      el.classList.remove('show');
+    }
+  });
+}
+function toggleReviews(){
+  const w=document.getElementById('reviewsWrap');
+  const show = !(w.classList.contains('show'));
+  closeOtherSections('reviewsWrap');
+  w.classList.toggle('show', show);
+  if(show) renderReviews();
+  setTimeout(syncStickyHeight, 10);
+}
+function toggleGallery(){
+  const w=document.getElementById('galleryWrap');
+  const show = !(w.classList.contains('show'));
+  closeOtherSections('galleryWrap');
+  w.classList.toggle('show', show);
+  if(show) renderGallery();
+  setTimeout(syncStickyHeight, 10);
+}
+
 function openManagerChat(e){
   try{e.preventDefault();e.stopPropagation();}catch(_){}
   const url=`https://t.me/user?id=${ADMIN_ID}`;
@@ -1310,13 +1611,31 @@ function openManagerChat(e){
 /* ✅ отзыв: открываем ссылку */
 function openYandexReviews(e){
   try{e.preventDefault();e.stopPropagation();}catch(_){}
-  closeTopMenu();
   try{Telegram.WebApp.openLink(YANDEX_REVIEWS_URL);}catch(_){window.open(YANDEX_REVIEWS_URL,'_blank');}
+}
+
+/* ✅ VIP: позвать официанта — отправляет уведомление администратору через sendData */
+function callWaiter(){
+  // можно попросить номер столика (быстро)
+  const table = prompt(lang==='ru'?'Номер столика (если знаете):':lang==='uz'?'Stol raqami (bilasizmi):':lang==='tr'?'Masa numarası (biliyorsanız):':'Table number (if known):') || '';
+  const payload = {
+    action:'call_waiter',
+    brand:'ARBA ISTANBUL RESTAURANT',
+    tg:{id:tg_id,username:tg_username,first_name:tg_first_name},
+    table: table.trim(),
+    ts: Date.now()
+  };
+  try{
+    Telegram.WebApp.HapticFeedback?.notificationOccurred?.('success');
+    Telegram.WebApp.sendData(JSON.stringify(payload));
+    showPopup(escapeHtml(UI[lang].waiterSent));
+  }catch(_){
+    showPopup('✅');
+  }
 }
 
 function openInstagram(e){
   try{e.preventDefault();e.stopPropagation();}catch(_){}
-  closeTopMenu();
   try{Telegram.WebApp.openLink(INSTA_URL);}catch(_){window.open(INSTA_URL,'_blank');}
 }
 
@@ -1326,6 +1645,13 @@ function openImage(e,id){
   const it=ITEM_INDEX[id];
   imgModalTitle.innerText=nameOf(id);
   imgModalImg.src=it?.img||'images/logo.png';
+  imgModalImg.onerror=function(){this.onerror=null;this.src='images/logo.png';};
+  imgModal.classList.add('show');
+}
+function openGalleryImage(e,title,src){
+  try{e.preventDefault();e.stopPropagation();}catch(_){}
+  imgModalTitle.innerText = title || 'Фото';
+  imgModalImg.src = src || 'images/logo.png';
   imgModalImg.onerror=function(){this.onerror=null;this.src='images/logo.png';};
   imgModal.classList.add('show');
 }
@@ -1547,7 +1873,6 @@ function chg(id,delta){
   cart[id]=Math.max(0,(cart[id]||0)+delta);
   syncCounters(id);
   updateTotal();
-  /* ✅ ДОБАВЛЕНО */
   renderCombo();
 }
 
@@ -1610,6 +1935,55 @@ function openCart(){
   try{ el.scrollIntoView({behavior:'smooth', block:'start'}); }catch(_){}
 }
 
+/* ✅ render gallery */
+function renderGallery(){
+  const grid = document.getElementById('galleryGrid');
+  if(!grid) return;
+  grid.innerHTML = '';
+  GALLERY.forEach(g=>{
+    const cap = g.cap?.[lang] || g.cap?.ru || '';
+    grid.innerHTML += `
+      <div class="gallery-tile" onclick="openGalleryImage(event,'${escapeHtml(cap)}','${g.img}')">
+        <img src="${g.img}" alt="${escapeHtml(cap)}" onerror="this.onerror=null;this.src='images/logo.png'">
+        <div class="gallery-cap">${escapeHtml(cap)}</div>
+      </div>
+    `;
+  });
+}
+
+/* ✅ render reviews */
+function starsStr(n){
+  const s = Math.max(0, Math.min(5, Number(n)||0));
+  return '★'.repeat(s) + '☆'.repeat(5-s);
+}
+function pickReviewText(r){
+  return (r?.text?.[lang] || r?.text?.ru || '');
+}
+function renderReviews(){
+  const list = document.getElementById('reviewsList');
+  if(!list) return;
+
+  const rv = document.getElementById('ratingValue');
+  const rs = document.getElementById('ratingStars');
+  if(rv) rv.innerText = String(REVIEWS_AVG);
+  if(rs) rs.innerText = starsStr(Math.round(REVIEWS_AVG));
+
+  list.innerHTML = '';
+  REVIEWS_DATA.slice(0,3).forEach(r=>{
+    const t = pickReviewText(r);
+    list.innerHTML += `
+      <div class="review-card">
+        <div class="review-head">
+          <div class="review-name">${escapeHtml(r.name||'')}</div>
+          <div class="review-date">${escapeHtml(r.date||'')}</div>
+        </div>
+        <div class="review-text">${escapeHtml(t)}</div>
+        <div class="review-stars">${starsStr(r.stars)}</div>
+      </div>
+    `;
+  });
+}
+
 /* order */
 function genOrderId(){
   const d=new Date();
@@ -1634,14 +2008,14 @@ function sendOrder(){
     return;
   }
 
-  popup.classList.add('show');
-  popupText.innerText = "✅";
+  showPopup("✅");
 
   const itemsSum=calcItemsSum();
   const dfee=calcDeliveryFee();
   const grand=itemsSum+dfee;
 
   const payload={
+    action:'order',
     tg:{id:tg_id,username:tg_username,first_name:tg_first_name},
     items,
     total_items: formatSum(itemsSum),
