@@ -356,6 +356,21 @@ textarea.input{height:90px;}
 .menu-sub{font-size:12px;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
 .menu-right{opacity:.65;font-weight:900;}
 
+/* about text blocks */
+.about-desc{
+  margin-top:10px;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid rgba(0,0,0,.08);
+  background:#fff;
+  color:#1d1d1d;
+  line-height:1.28;
+  font-weight:800;
+}
+.about-desc b{font-weight:900;}
+.about-desc .muted{opacity:.85;font-weight:800;}
+.about-desc .line{margin-top:8px;}
+
 /* search (закрыт по умолчанию) */
 .search-title{display:none;width:100%;padding:10px 14px 0;font-weight:900;color:#fff;}
 .search-title.show{display:block;}
@@ -541,50 +556,6 @@ textarea.input{height:90px;}
 
   <div class="menu-list">
 
-    <!-- ✅ ДОБАВЛЕНО: О нас -->
-    <div class="menu-item" onclick="toggleAbout()" role="button">
-      <div class="menu-left">
-        <div class="menu-ic">ℹ️</div>
-        <div class="menu-txt">
-          <div class="menu-name" id="mAboutTitle">О нас</div>
-          <div class="menu-sub" id="mAboutSub">Адрес, телефоны, график</div>
-        </div>
-      </div>
-      <div class="menu-right">›</div>
-    </div>
-
-    <div id="aboutWrap" style="display:none; padding:6px 4px 10px;">
-      <div style="border:1px solid rgba(0,0,0,.08); border-radius:16px; overflow:hidden; background:rgba(0,0,0,.03); padding:12px;">
-        <div style="font-weight:900; margin-bottom:6px;" id="aboutAddrLabel">📍 Адрес</div>
-        <div style="font-weight:900; color:#1d1d1d; opacity:.92; line-height:1.25;" id="aboutAddrText">
-          Самарканд, ул. Махмуда Кашгари, 92
-        </div>
-
-        <div style="height:10px;"></div>
-
-        <button class="btn" style="width:100%; min-width:auto;" type="button" onclick="openRouteFromAbout(event)" id="aboutRouteBtn">
-          📍 Построить маршрут
-        </button>
-
-        <div style="height:12px;"></div>
-
-        <div style="font-weight:900; margin-bottom:6px;" id="aboutPhoneLabel">📞 Телефон</div>
-        <div style="display:flex; flex-direction:column; gap:6px;">
-          <a href="tel:+998662334499" onclick="callPhone(event)" style="text-decoration:none; font-weight:900; color:#8B0E13;">
-            +998 66 233 44 99
-          </a>
-          <a href="tel:+998935336067" onclick="callPhone2(event)" style="text-decoration:none; font-weight:900; color:#8B0E13;">
-            +998 93 533 60 67
-          </a>
-        </div>
-
-        <div style="height:12px;"></div>
-
-        <div style="font-weight:900; margin-bottom:6px;" id="aboutHoursLabel">🕒 График работы</div>
-        <div style="font-weight:900; color:#1d1d1d; opacity:.92;" id="aboutHoursText">11:00–23:00</div>
-      </div>
-    </div>
-
     <!-- ✅ ДОБАВЛЕНО: Оставить отзыв (Яндекс) -->
     <div class="menu-item" onclick="openYandexReviews(event)" role="button">
       <div class="menu-left">
@@ -656,6 +627,54 @@ textarea.input{height:90px;}
       </div>
       <div class="menu-right">›</div>
     </a>
+
+    <!-- ✅ ПЕРЕМЕЩЕНО: О нас — теперь под Instagram -->
+    <div class="menu-item" onclick="toggleAbout()" role="button">
+      <div class="menu-left">
+        <div class="menu-ic">ℹ️</div>
+        <div class="menu-txt">
+          <div class="menu-name" id="mAboutTitle">О нас</div>
+          <div class="menu-sub" id="mAboutSub">Адрес, телефоны, график</div>
+        </div>
+      </div>
+      <div class="menu-right">›</div>
+    </div>
+
+    <div id="aboutWrap" style="display:none; padding:6px 4px 10px;">
+      <div style="border:1px solid rgba(0,0,0,.08); border-radius:16px; overflow:hidden; background:rgba(0,0,0,.03); padding:12px;">
+        <div style="font-weight:900; margin-bottom:6px;" id="aboutAddrLabel">📍 Адрес</div>
+        <div style="font-weight:900; color:#1d1d1d; opacity:.92; line-height:1.25;" id="aboutAddrText">
+          Самарканд, ул. Махмуда Кашгари, 92
+        </div>
+
+        <div style="height:10px;"></div>
+
+        <button class="btn" style="width:100%; min-width:auto;" type="button" onclick="openRouteFromAbout(event)" id="aboutRouteBtn">
+          📍 Построить маршрут
+        </button>
+
+        <div style="height:12px;"></div>
+
+        <div style="font-weight:900; margin-bottom:6px;" id="aboutPhoneLabel">📞 Телефон</div>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <a href="tel:+998662334499" onclick="callPhone(event)" style="text-decoration:none; font-weight:900; color:#8B0E13;">
+            +998 66 233 44 99
+          </a>
+          <a href="tel:+998935336067" onclick="callPhone2(event)" style="text-decoration:none; font-weight:900; color:#8B0E13;">
+            +998 93 533 60 67
+          </a>
+        </div>
+
+        <div style="height:12px;"></div>
+
+        <div style="font-weight:900; margin-bottom:6px;" id="aboutHoursLabel">🕒 График работы</div>
+        <div style="font-weight:900; color:#1d1d1d; opacity:.92;" id="aboutHoursText">11:00–23:00</div>
+
+        <!-- ✅ ДОБАВЛЕНО: Текст "О нас" (по языкам) -->
+        <div class="about-desc" id="aboutDescText"></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -817,6 +836,42 @@ const ABOUT_ADDR = {
   tr:"Semerkant, Mahmud Kaşgari Cd., 92"
 };
 const ABOUT_HOURS = "11:00–23:00";
+
+/* ✅ ДОБАВЛЕНО: Текст для "О нас" по языкам */
+const ABOUT_DESC = {
+  ru:`ARBA Istanbul Restaurant — это уютный ресторан турецкой кухни в самом сердце Самарканда.<br>
+Мы предлагаем настоящие турецкие блюда, приготовленные по традиционным рецептам с использованием свежих и качественных ингредиентов.<br><br>
+В нашем меню — сочные кебабы, ароматные пиде, гриль, стейки, супы и холодные закуски.<br>
+Мы создаём атмосферу гостеприимства и уюта, чтобы каждый гость почувствовал вкус настоящего Стамбула.<br><br>
+<b>📍 Адрес:</b> Самарканд, ул. Махмуда Кашгари, 92<br>
+<b>📞 Телефон:</b> +998 66 233 44 99<br>
+<b>📞 Телефон:</b> +998 93 533 60 67<br>
+<b>🕒 График работы:</b> 11:00 – 23:00`,
+  uz:`ARBA Istanbul Restaurant — Samarqand markazida joylashgan shinam turk oshxonasi restorani.<br>
+Biz an’anaviy retseptlar asosida tayyorlangan haqiqiy turk taomlarini taklif qilamiz.<br><br>
+Menyuda shirali kebablar, mazali pide, gril, steyk, sho‘rvalar va sovuq gazaklar mavjud.<br>
+Har bir mehmon o‘zini Istanbul muhitida his qilishi uchun iliq va mehmondo‘st muhit yaratamiz.<br><br>
+<b>📍 Manzil:</b> Samarqand, Mahmud Qoshg‘ari ko‘chasi, 92<br>
+<b>📞 Telefon:</b> +998 66 233 44 99<br>
+<b>📞 Telefon:</b> +998 93 533 60 67<br>
+<b>🕒 Ish vaqti:</b> 11:00 – 23:00`,
+  en:`ARBA Istanbul Restaurant is a cozy Turkish cuisine restaurant located in the heart of Samarkand.<br>
+We serve authentic Turkish dishes prepared according to traditional recipes using fresh and high-quality ingredients.<br><br>
+Our menu includes juicy kebabs, delicious pide, grill dishes, steaks, soups, and cold appetizers.<br>
+We create a warm and welcoming atmosphere so every guest can experience the true taste of Istanbul.<br><br>
+<b>📍 Address:</b> 92 Mahmud Kashgari Street, Samarkand<br>
+<b>📞 Phone:</b> +998 66 233 44 99<br>
+<b>📞 Phone:</b> +998 93 533 60 67<br>
+<b>🕒 Working hours:</b> 11:00 – 23:00`,
+  tr:`ARBA Istanbul Restaurant, Semerkant’ın merkezinde bulunan sıcak ve samimi bir Türk mutfağı restoranıdır.<br>
+Geleneksel tariflere göre hazırlanmış, taze ve kaliteli malzemelerle yapılan gerçek Türk yemekleri sunuyoruz.<br><br>
+Menümüzde sulu kebaplar, lezzetli pideler, ızgara çeşitleri, steakler, çorbalar ve soğuk mezeler bulunmaktadır.<br>
+Her misafirimizin İstanbul’un gerçek lezzetini hissetmesi için sıcak ve misafirperver bir ortam sunuyoruz.<br><br>
+<b>📍 Adres:</b> Semerkant, Mahmud Kaşgari Caddesi 92<br>
+<b>📞 Telefon:</b> +998 66 233 44 99<br>
+<b>📞 Telefon:</b> +998 93 533 60 67<br>
+<b>🕒 Çalışma saatleri:</b> 11:00 – 23:00`
+};
 
 /* Telegram user */
 const tgUser = Telegram.WebApp.initDataUnsafe?.user || {};
@@ -1131,6 +1186,10 @@ function applyUI(){
   aboutHoursLabel.innerText = UI[lang].aboutHours;
   aboutAddrText.innerText   = ABOUT_ADDR[lang] || ABOUT_ADDR.ru;
   aboutHoursText.innerText  = ABOUT_HOURS;
+
+  /* ✅ вставляем текст "О нас" по языку */
+  const d = document.getElementById('aboutDescText');
+  if(d) d.innerHTML = ABOUT_DESC[lang] || ABOUT_DESC.ru;
 
   /* review */
   mReviewTitle.innerText = UI[lang].reviewTitle;
