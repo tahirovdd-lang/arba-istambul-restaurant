@@ -541,17 +541,61 @@ textarea.input{height:90px;}
 
   <div class="menu-list">
 
-    <!-- ✅ ДОБАВЛЕНО: "Оставить отзыв" (Яндекс карты) -->
-    <a class="menu-item" href="#" onclick="openReview(event)">
+    <!-- ✅ ДОБАВЛЕНО: О нас -->
+    <div class="menu-item" onclick="toggleAbout()" role="button">
+      <div class="menu-left">
+        <div class="menu-ic">ℹ️</div>
+        <div class="menu-txt">
+          <div class="menu-name" id="mAboutTitle">О нас</div>
+          <div class="menu-sub" id="mAboutSub">Адрес, телефоны, график</div>
+        </div>
+      </div>
+      <div class="menu-right">›</div>
+    </div>
+
+    <div id="aboutWrap" style="display:none; padding:6px 4px 10px;">
+      <div style="border:1px solid rgba(0,0,0,.08); border-radius:16px; overflow:hidden; background:rgba(0,0,0,.03); padding:12px;">
+        <div style="font-weight:900; margin-bottom:6px;" id="aboutAddrLabel">📍 Адрес</div>
+        <div style="font-weight:900; color:#1d1d1d; opacity:.92; line-height:1.25;" id="aboutAddrText">
+          Самарканд, ул. Махмуда Кашгари, 92
+        </div>
+
+        <div style="height:10px;"></div>
+
+        <button class="btn" style="width:100%; min-width:auto;" type="button" onclick="openRouteFromAbout(event)" id="aboutRouteBtn">
+          📍 Построить маршрут
+        </button>
+
+        <div style="height:12px;"></div>
+
+        <div style="font-weight:900; margin-bottom:6px;" id="aboutPhoneLabel">📞 Телефон</div>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <a href="tel:+998662334499" onclick="callPhone(event)" style="text-decoration:none; font-weight:900; color:#8B0E13;">
+            +998 66 233 44 99
+          </a>
+          <a href="tel:+998935336067" onclick="callPhone2(event)" style="text-decoration:none; font-weight:900; color:#8B0E13;">
+            +998 93 533 60 67
+          </a>
+        </div>
+
+        <div style="height:12px;"></div>
+
+        <div style="font-weight:900; margin-bottom:6px;" id="aboutHoursLabel">🕒 График работы</div>
+        <div style="font-weight:900; color:#1d1d1d; opacity:.92;" id="aboutHoursText">11:00–23:00</div>
+      </div>
+    </div>
+
+    <!-- ✅ ДОБАВЛЕНО: Оставить отзыв (Яндекс) -->
+    <div class="menu-item" onclick="openYandexReviews(event)" role="button">
       <div class="menu-left">
         <div class="menu-ic">⭐</div>
         <div class="menu-txt">
           <div class="menu-name" id="mReviewTitle">Оставить отзыв</div>
-          <div class="menu-sub" id="mReviewSub">Яндекс карты / отзывы</div>
+          <div class="menu-sub" id="mReviewSub">Яндекс отзывы / рейтинг</div>
         </div>
       </div>
       <div class="menu-right">›</div>
-    </a>
+    </div>
 
     <div class="menu-item" onclick="toggleLegal()" role="button">
       <div class="menu-left">
@@ -742,10 +786,10 @@ window.addEventListener('resize', ()=>setTimeout(syncStickyHeight, 50), {passive
 window.addEventListener('orientationchange', ()=>setTimeout(syncStickyHeight, 250), {passive:true});
 
 /* ✅ геолокация (в шапке) */
-const MAP_URL = "https://yandex.uz/maps/org/60749009354/?filter=alternate_vertical%3ARequestWindow&ll=66.950198%2C39.651845&mode=search&sctx=ZAAAAAgBEAAaKAoSCfBrJAnCu1BAEdOHLqhv00NAEhIJDJQUWABTpj8ReqcC7nn%2BlD8iBgABAgMEBSgKOABA3lBIAWIkc25pcHBldF9leHBfbmFtZT1mdWxsb2JqZWN0cy8xLng6cmVmYiNzbmlwcGV0X2V4cF9uYW1lPXRvcG9iamVjdHMvMS54OnJlZmIec25pcHBldF9leHBfbmFtZT1nb29kcy8xLng6cmVmYidzbmlwcGV0X2V4cF9uYW1lPWdvb2RzX3JlZ2lzdGVyLzEueDpyZWZiC2ZyZXNobmVzcz0wYhdzb3VyY2U9YnVzaW5lc3M6ZXhwX3JlZmIVc291cmNlPXByaWNlczpleHBfcmVmagJ1ep0BzczMPaABAKgBAL0BByYCjMIBBsqjsafiAYICGEFyYmEgaXN0YW5idWwgcmVzdGF1cmFudIoCAJICBTExNTA4mgIMZGVza3RvcC1tYXBz&sll=66.950198%2C39.651845&sspn=0.043602%2C0.020502&text=Arba%20istanbul%20restaurant&z=15";
+const MAP_URL = "https://yandex.uz/maps/org/60749009354/?filter=alternate_vertical%3ARequestWindow&ll=66.947552%2C39.651712&mode=search&sctx=ZAAAAAgBEAAaKAoSCfBrJAnCu1BAEdOHLqhv00NAEhIJDJQUWABTpj8ReqcC7nn%2BlD8iBgABAgMEBSgKOABA3lBIAWIkc25pcHBldF9leHBfbmFtZT1mdWxsb2JqZWN0cy8xLng6cmVmYiNzbmlwcGV0X2V4cF9uYW1lPXRvcG9iamVjdHMvMS54OnJlZmIec25pcHBldF9leHBfbmFtZT1nb29kcy8xLng6cmVmYidzbmlwcGV0X2V4cF9uYW1lPWdvb2RzX3JlZ2lzdGVyLzEueDpyZWZiC2ZyZXNobmVzcz0wYhdzb3VyY2U9YnVzaW5lc3M6ZXhwX3JlZmIVc291cmNlPXByaWNlczpleHBfcmVmagJ1ep0BzczMPaABAKgBAL0BByYCjMIBBsqjsafiAYICGEFyYmEgaXN0YW5idWwgcmVzdGF1cmFudIoCAJICBTExNTA4mgIMZGVza3RvcC1tYXBz&sll=66.950198%2C39.651845&sspn=0.043602%2C0.020502&text=Arba%20istanbul%20restaurant&z=14";
 
-/* ✅ Оставить отзыв (Яндекс карты) */
-const REVIEW_URL = "https://yandex.uz/maps/org/60749009354/?filter=alternate_vertical%3ARequestWindow&ll=66.947552%2C39.651712&mode=search&sctx=ZAAAAAgBEAAaKAoSCfBrJAnCu1BAEdOHLqhv00NAEhIJDJQUWABTpj8ReqcC7nn%2BlD8iBgABAgMEBSgKOABA3lBIAWIkc25pcHBldF9leHBfbmFtZT1mdWxsb2JqZWN0cy8xLng6cmVmYiNzbmlwcGV0X2V4cF9uYW1lPXRvcG9iamVjdHMvMS54OnJlZmIec25pcHBldF9leHBfbmFtZT1nb29kcy8xLng6cmVmYidzbmlwcGV0X2V4cF9uYW1lPWdvb2RzX3JlZ2lzdGVyLzEueDpyZWZiC2ZyZXNobmVzcz0wYhdzb3VyY2U9YnVzaW5lc3M6ZXhwX3JlZmIVc291cmNlPXByaWNlczpleHBfcmVmagJ1ep0BzczMPaABAKgBAL0BByYCjMIBBsqjsafiAYICGEFyYmEgaXN0YW5idWwgcmVzdGF1cmFudIoCAJICBTExNTA4mgIMZGVza3RvcC1tYXBz&sll=66.950198%2C39.651845&sspn=0.043602%2C0.020502&text=Arba%20istanbul%20restaurant&z=14";
+/* ✅ ссылка на отзывы (кнопка в бургере) */
+const YANDEX_REVIEWS_URL = "https://yandex.uz/maps/org/60749009354/?filter=alternate_vertical%3ARequestWindow&ll=66.947552%2C39.651712&mode=search&sctx=ZAAAAAgBEAAaKAoSCfBrJAnCu1BAEdOHLqhv00NAEhIJDJQUWABTpj8ReqcC7nn%2BlD8iBgABAgMEBSgKOABA3lBIAWIkc25pcHBldF9leHBfbmFtZT1mdWxsb2JqZWN0cy8xLng6cmVmYiNzbmlwcGV0X2V4cF9uYW1lPXRvcG9iamVjdHMvMS54OnJlZmIec25pcHBldF9leHBfbmFtZT1nb29kcy8xLng6cmVmYidzbmlwcGV0X2V4cF9uYW1lPWdvb2RzX3JlZ2lzdGVyLzEueDpyZWZiC2ZyZXNobmVzcz0wYhdzb3VyY2U9YnVzaW5lc3M6ZXhwX3JlZmIVc291cmNlPXByaWNlczpleHBfcmVmagJ1ep0BzczMPaABAKgBAL0BByYCjMIBBsqjsafiAYICGEFyYmEgaXN0YW5idWwgcmVzdGF1cmFudIoCAJICBTExNTA4mgIMZGVza3RvcC1tYXBz&sll=66.950198%2C39.651845&sspn=0.043602%2C0.020502&text=Arba%20istanbul%20restaurant&z=14";
 
 const INSTA_URL = "https://www.instagram.com/arba_istanbul_restaurant01/";
 const ADMIN_ID = 6013591658;
@@ -764,6 +808,15 @@ const PHONE1_DISPLAY = "+998 66 233 44 99";
 const PHONE1_TEL = "tel:+998662334499";
 const PHONE2_DISPLAY = "+998 93 533 60 67";
 const PHONE2_TEL = "tel:+998935336067";
+
+/* ABOUT content */
+const ABOUT_ADDR = {
+  ru:"Самарканд, ул. Махмуда Кашгари, 92",
+  uz:"Samarqand, Mahmud Qashg‘ari ko‘chasi, 92",
+  en:"Samarkand, Mahmud Kashgari str., 92",
+  tr:"Semerkant, Mahmud Kaşgari Cd., 92"
+};
+const ABOUT_HOURS = "11:00–23:00";
 
 /* Telegram user */
 const tgUser = Telegram.WebApp.initDataUnsafe?.user || {};
@@ -812,74 +865,167 @@ function copyText(t){
   }catch(_){}
 }
 
-/* ✅ открыть отзывы */
-function openReview(e){
-  try{ e.preventDefault(); e.stopPropagation(); }catch(_){}
-  closeTopMenu();
-  try{ Telegram.WebApp.openLink(REVIEW_URL); }catch(_){ window.open(REVIEW_URL,'_blank'); }
-}
-
 /* UI translations */
 const UI = {
   ru:{
     menu:'Меню',
+    aboutTitle:'О нас',
+    aboutSub:'Адрес, телефоны, график',
+    aboutAddr:'📍 Адрес',
+    aboutRoute:'📍 Построить маршрут',
+    aboutPhone:'📞 Телефон',
+    aboutHours:'🕒 График работы',
     reviewTitle:'Оставить отзыв',
-    reviewSub:'Яндекс карты / отзывы',
-    legalTitle:'Юридическим лицам',legalSub:'Контакты для договоров / счетов',legalMail:'✉️ Почта',legalPhone:'📞 Телефон',legalChat:'💬 Чат с менеджером',
-    callTitle:'Позвонить',instaSub:'Открыть Instagram',
-    searchResults:'Результаты поиска',popular:'🔥 Популярное',gift:'⭐ Рекомендуем',
-    delivery:'🚚 Доставка',pickup:'🏃 Самовывоз',
-    address:'📍 Адрес доставки',phone:'📞 Телефон',
-    cart:'🛒 Корзина',total:'Итого',order:'Оформить заказ',comment:'✍️ Комментарий к заказу',
-    cash:'💵 Наличные',click:'💳 CLICK',online:'💳 Онлайн',
-    sum:'сум',recip:'Получатель',card:'Карта',copy:'Копировать',
+    reviewSub:'Яндекс отзывы / рейтинг',
+    legalTitle:'Юридическим лицам',
+    legalSub:'Контакты для договоров / счетов',
+    legalMail:'✉️ Почта',
+    legalPhone:'📞 Телефон',
+    legalChat:'💬 Чат с менеджером',
+    callTitle:'Позвонить',
+    instaSub:'Открыть Instagram',
+    searchResults:'Результаты поиска',
+    popular:'🔥 Популярное',
+    gift:'⭐ Рекомендуем',
+    delivery:'🚚 Доставка',
+    pickup:'🏃 Самовывоз',
+    address:'📍 Адрес доставки',
+    phone:'📞 Телефон',
+    cart:'🛒 Корзина',
+    total:'Итого',
+    order:'Оформить заказ',
+    comment:'✍️ Комментарий к заказу',
+    cash:'💵 Наличные',
+    click:'💳 CLICK',
+    online:'💳 Онлайн',
+    sum:'сум',
+    recip:'Получатель',
+    card:'Карта',
+    copy:'Копировать',
     onlineHint:'После оплаты нажмите «Оформить заказ» и напишите в комментарии “Оплатил(а)”.',
-    empty:'Корзина пустая',clickTitle:'CLICK QR',clickHint:'Отсканируйте QR в приложении CLICK, затем нажмите «Оформить заказ».'
+    empty:'Корзина пустая',
+    clickTitle:'CLICK QR',
+    clickHint:'Отсканируйте QR в приложении CLICK, затем нажмите «Оформить заказ».'
   },
   uz:{
     menu:'Menyu',
+    aboutTitle:'Biz haqimizda',
+    aboutSub:'Manzil, telefonlar, ish vaqti',
+    aboutAddr:'📍 Manzil',
+    aboutRoute:"📍 Yo‘l ko‘rsatish",
+    aboutPhone:'📞 Telefon',
+    aboutHours:'🕒 Ish vaqti',
     reviewTitle:'Fikr qoldirish',
-    reviewSub:'Yandex xarita / fikrlar',
-    legalTitle:'Yuridik shaxslar',legalSub:"Shartnoma / hisob uchun kontaktlar",legalMail:'✉️ Pochta',legalPhone:'📞 Telefon',legalChat:'💬 Menejer bilan chat',
-    callTitle:"Qo'ng'iroq qilish",instaSub:"Instagramni ochish",
-    searchResults:'Qidiruv natijalari',popular:'🔥 Ommabop',gift:'⭐ Tavsiya',
-    delivery:'🚚 Yetkazish',pickup:'🏃 Olib ketish',
-    address:'📍 Manzil',phone:'📞 Telefon',
-    cart:'🛒 Savat',total:'Jami',order:'Buyurtma berish',comment:'✍️ Izoh',
-    cash:'💵 Naqd',click:'💳 CLICK',online:'💳 Onlayn',
-    sum:"so‘m",recip:'Qabul qiluvchi',card:'Karta',copy:'Nusxa',
+    reviewSub:'Yandex fikrlar / reyting',
+    legalTitle:'Yuridik shaxslar',
+    legalSub:"Shartnoma / hisob uchun kontaktlar",
+    legalMail:'✉️ Pochta',
+    legalPhone:'📞 Telefon',
+    legalChat:'💬 Menejer bilan chat',
+    callTitle:"Qo'ng'iroq qilish",
+    instaSub:"Instagramni ochish",
+    searchResults:'Qidiruv natijalari',
+    popular:'🔥 Ommabop',
+    gift:'⭐ Tavsiya',
+    delivery:'🚚 Yetkazish',
+    pickup:'🏃 Olib ketish',
+    address:'📍 Manzil',
+    phone:'📞 Telefon',
+    cart:'🛒 Savat',
+    total:'Jami',
+    order:'Buyurtma berish',
+    comment:'✍️ Izoh',
+    cash:'💵 Naqd',
+    click:'💳 CLICK',
+    online:'💳 Onlayn',
+    sum:"so‘m",
+    recip:'Qabul qiluvchi',
+    card:'Karta',
+    copy:'Nusxa',
     onlineHint:'To‘lovdan so‘ng “Buyurtma berish”ni bosing va izohga “To‘ladim” deb yozing.',
-    empty:"Savat bo‘sh",clickTitle:'CLICK QR',clickHint:"CLICK ilovasida QR ni skaner qiling, so‘ng “Buyurtma berish”ni bosing."
+    empty:"Savat bo‘sh",
+    clickTitle:'CLICK QR',
+    clickHint:"CLICK ilovasida QR ni skaner qiling, so‘ng “Buyurtma berish”ni bosing."
   },
   en:{
     menu:'Menu',
+    aboutTitle:'About us',
+    aboutSub:'Address, phones, hours',
+    aboutAddr:'📍 Address',
+    aboutRoute:'📍 Get directions',
+    aboutPhone:'📞 Phone',
+    aboutHours:'🕒 Working hours',
     reviewTitle:'Leave a review',
-    reviewSub:'Yandex Maps / reviews',
-    legalTitle:'For legal entities',legalSub:'Contacts for contracts / invoices',legalMail:'✉️ Email',legalPhone:'📞 Phone',legalChat:'💬 Chat with manager',
-    callTitle:'Call',instaSub:'Open Instagram',
-    searchResults:'Search results',popular:'🔥 Popular',gift:'⭐ Recommended',
-    delivery:'🚚 Delivery',pickup:'🏃 Pickup',
-    address:'📍 Address',phone:'📞 Phone',
-    cart:'🛒 Cart',total:'Total',order:'Place order',comment:'✍️ Comment',
-    cash:'💵 Cash',click:'💳 CLICK',online:'💳 Online',
-    sum:'sum',recip:'Recipient',card:'Card',copy:'Copy',
+    reviewSub:'Yandex reviews / rating',
+    legalTitle:'For legal entities',
+    legalSub:'Contacts for contracts / invoices',
+    legalMail:'✉️ Email',
+    legalPhone:'📞 Phone',
+    legalChat:'💬 Chat with manager',
+    callTitle:'Call',
+    instaSub:'Open Instagram',
+    searchResults:'Search results',
+    popular:'🔥 Popular',
+    gift:'⭐ Recommended',
+    delivery:'🚚 Delivery',
+    pickup:'🏃 Pickup',
+    address:'📍 Address',
+    phone:'📞 Phone',
+    cart:'🛒 Cart',
+    total:'Total',
+    order:'Place order',
+    comment:'✍️ Comment',
+    cash:'💵 Cash',
+    click:'💳 CLICK',
+    online:'💳 Online',
+    sum:'sum',
+    recip:'Recipient',
+    card:'Card',
+    copy:'Copy',
     onlineHint:'After payment press “Place order” and write “Paid” in comment.',
-    empty:'Cart is empty',clickTitle:'CLICK QR',clickHint:'Scan the QR in CLICK app, then press “Place order”.'
+    empty:'Cart is empty',
+    clickTitle:'CLICK QR',
+    clickHint:'Scan the QR in CLICK app, then press “Place order”.'
   },
   tr:{
     menu:'Menü',
+    aboutTitle:'Hakkımızda',
+    aboutSub:'Adres, telefonlar, saatler',
+    aboutAddr:'📍 Adres',
+    aboutRoute:'📍 Yol tarifi',
+    aboutPhone:'📞 Telefon',
+    aboutHours:'🕒 Çalışma saatleri',
     reviewTitle:'Yorum bırak',
-    reviewSub:'Yandex Haritalar / yorumlar',
-    legalTitle:'Tüzel kişiler için',legalSub:'Sözleşme / fatura iletişim',legalMail:'✉️ E-posta',legalPhone:'📞 Telefon',legalChat:'💬 Yöneticiyle sohbet',
-    callTitle:'Ara',instaSub:"Instagram’ı aç",
-    searchResults:'Arama sonuçları',popular:'🔥 Popüler',gift:'⭐ Önerilen',
-    delivery:'🚚 Teslimat',pickup:'🏃 Gel-al',
-    address:'📍 Adres',phone:'📞 Telefon',
-    cart:'🛒 Sepet',total:'Toplam',order:'Sipariş ver',comment:'✍️ Not',
-    cash:'💵 Nakit',click:'💳 CLICK',online:'💳 Online',
-    sum:'sum',recip:'Alıcı',card:'Kart',copy:'Kopyala',
+    reviewSub:'Yandex yorumlar / puan',
+    legalTitle:'Tüzel kişiler için',
+    legalSub:'Sözleşme / fatura iletişim',
+    legalMail:'✉️ E-posta',
+    legalPhone:'📞 Telefon',
+    legalChat:'💬 Yöneticiyle sohbet',
+    callTitle:'Ara',
+    instaSub:"Instagram’ı aç",
+    searchResults:'Arama sonuçları',
+    popular:'🔥 Popüler',
+    gift:'⭐ Önerilen',
+    delivery:'🚚 Teslimat',
+    pickup:'🏃 Gel-al',
+    address:'📍 Adres',
+    phone:'📞 Telefon',
+    cart:'🛒 Sepet',
+    total:'Toplam',
+    order:'Sipariş ver',
+    comment:'✍️ Not',
+    cash:'💵 Nakit',
+    click:'💳 CLICK',
+    online:'💳 Online',
+    sum:'sum',
+    recip:'Alıcı',
+    card:'Kart',
+    copy:'Kopyala',
     onlineHint:'Ödemeden sonra “Sipariş ver”e basın ve nota “Ödedim” yazın.',
-    empty:'Sepet boş',clickTitle:'CLICK QR',clickHint:"CLICK uygulamasında QR’ı okutun, sonra “Sipariş ver”e basın."
+    empty:'Sepet boş',
+    clickTitle:'CLICK QR',
+    clickHint:"CLICK uygulamasında QR’ı okutun, sonra “Sipariş ver”e basın."
   }
 };
 
@@ -976,7 +1122,17 @@ function formatSum(x){const n = Number(x) || 0; return n.toString().replace(/\B(
 function applyUI(){
   menuTitle.innerText = UI[lang].menu;
 
-  /* ✅ добавили тексты для "Оставить отзыв" */
+  /* about */
+  mAboutTitle.innerText = UI[lang].aboutTitle;
+  mAboutSub.innerText   = UI[lang].aboutSub;
+  aboutAddrLabel.innerText  = UI[lang].aboutAddr;
+  aboutRouteBtn.innerText   = UI[lang].aboutRoute;
+  aboutPhoneLabel.innerText = UI[lang].aboutPhone;
+  aboutHoursLabel.innerText = UI[lang].aboutHours;
+  aboutAddrText.innerText   = ABOUT_ADDR[lang] || ABOUT_ADDR.ru;
+  aboutHoursText.innerText  = ABOUT_HOURS;
+
+  /* review */
   mReviewTitle.innerText = UI[lang].reviewTitle;
   mReviewSub.innerText   = UI[lang].reviewSub;
 
@@ -1039,6 +1195,10 @@ function openTopMenu(){ closeSearch(); menuBackdrop.classList.add('show'); menuS
 function closeTopMenu(){ menuBackdrop.classList.remove('show'); menuSheet.classList.remove('show'); }
 
 function openRoute(){ try{Telegram.WebApp.openLink(MAP_URL);}catch(_){window.open(MAP_URL,'_blank');} }
+function openRouteFromAbout(e){
+  try{e.preventDefault();e.stopPropagation();}catch(_){}
+  openRoute();
+}
 
 function callPhone(e){ try{e.preventDefault();e.stopPropagation();}catch(_){}
   try{Telegram.WebApp.openLink(PHONE1_TEL);}catch(_){window.location.href=PHONE1_TEL;}
@@ -1054,10 +1214,21 @@ function toggleLegal(){
   const w=document.getElementById('legalWrap');
   w.style.display=(w.style.display==='none'||!w.style.display)?'block':'none';
 }
+function toggleAbout(){
+  const w=document.getElementById('aboutWrap');
+  w.style.display=(w.style.display==='none'||!w.style.display)?'block':'none';
+}
 function openManagerChat(e){
   try{e.preventDefault();e.stopPropagation();}catch(_){}
   const url=`https://t.me/user?id=${ADMIN_ID}`;
   try{Telegram.WebApp.openLink(url);}catch(_){window.open(url,'_blank');}
+}
+
+/* ✅ отзыв: открываем ссылку */
+function openYandexReviews(e){
+  try{e.preventDefault();e.stopPropagation();}catch(_){}
+  closeTopMenu();
+  try{Telegram.WebApp.openLink(YANDEX_REVIEWS_URL);}catch(_){window.open(YANDEX_REVIEWS_URL,'_blank');}
 }
 
 function openInstagram(e){
