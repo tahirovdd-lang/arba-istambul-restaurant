@@ -261,8 +261,18 @@ async def webapp_data(message: types.Message):
 
 # ====== ЗАПУСК ======
 async def main():
-    await bot.delete_webhook(drop_pending_updates=True)
-    await dp.start_polling(bot)
+    try:
+        try:
+            await bot.delete_webhook(drop_pending_updates=True, request_timeout=10)
+            logging.info("Webhook deleted successfully")
+        except Exception as e:
+            logging.warning(f"delete_webhook skipped: {e}")
+
+        logging.info("Bot started successfully")
+        await dp.start_polling(bot)
+
+    finally:
+        await bot.session.close()
 
 if __name__ == "__main__":
     asyncio.run(main())
