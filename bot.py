@@ -20,7 +20,7 @@ logging.basicConfig(level=logging.INFO)
 # ====== НАСТРОЙКИ ======
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 if not BOT_TOKEN:
-    raise RuntimeError("❌ BOT_TOKEN не найден. Добавь переменную окружения BOT_TOKEN.")
+    raise RuntimeError("❌ BOT_TOKEN не найден.")
 
 BOT_USERNAME = os.getenv("BOT_USERNAME", "arba_istambul_bot").replace("@", "")
 ADMIN_ID = int(os.getenv("ADMIN_ID", "6013591658"))
@@ -33,20 +33,24 @@ WEBAPP_URL = os.getenv(
 bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
 dp = Dispatcher()
 
-# ====== АНТИ-ДУБЛЬ START ======
 _last_start: dict[int, float] = {}
 
+BTN_OPEN_MULTI = "Ochish • Открыть • Open"
+
+
+# ====== АНТИ-ДУБЛЬ START ======
 def allow_start(user_id: int, ttl: float = 2.0) -> bool:
     now = time.time()
     prev = _last_start.get(user_id, 0.0)
+
     if now - prev < ttl:
         return False
+
     _last_start[user_id] = now
     return True
 
-# ====== КНОПКИ ======
-BTN_OPEN_MULTI = "Ochish • Открыть • Open"
 
+# ====== КНОПКА ОТКРЫТИЯ ПРИЛОЖЕНИЯ ======
 def kb_webapp_reply() -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(
         keyboard=[
@@ -62,8 +66,11 @@ def kb_webapp_reply() -> ReplyKeyboardMarkup:
         input_field_placeholder="Откройте приложение"
     )
 
+
+# ====== КНОПКА ДЛЯ КАНАЛА ======
 def kb_channel_deeplink() -> InlineKeyboardMarkup:
     deeplink = f"https://t.me/{BOT_USERNAME}?startapp=menu"
+
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -75,7 +82,8 @@ def kb_channel_deeplink() -> InlineKeyboardMarkup:
         ]
     )
 
-# ====== ТЕКСТ ======
+
+# ====== ТЕКСТ ПРИВЕТСТВИЯ ======
 def welcome_text() -> str:
     return (
         "🇷🇺 Добро пожаловать в <b>ARBA ISTAMBUL RESTAURANT</b>! 👋\n"
@@ -85,6 +93,7 @@ def welcome_text() -> str:
         "🇬🇧 Welcome to <b>ARBA ISTAMBUL RESTAURANT</b>! 👋\n"
         "Tap the button below to open the app."
     )
+
 
 # ====== /start ======
 @dp.message(CommandStart())
@@ -97,6 +106,8 @@ async def start(message: types.Message):
         reply_markup=kb_webapp_reply()
     )
 
+
+# ====== /startapp ======
 @dp.message(Command("startapp"))
 async def startapp(message: types.Message):
     if not allow_start(message.from_user.id):
@@ -107,7 +118,8 @@ async def startapp(message: types.Message):
         reply_markup=kb_webapp_reply()
     )
 
-# ====== ПОСТ В КАНАЛ ======
+
+# ====== /post_menu ======
 @dp.message(Command("post_menu"))
 async def post_menu(message: types.Message):
     if message.from_user.id != ADMIN_ID:
@@ -146,32 +158,43 @@ async def post_menu(message: types.Message):
         logging.exception("CHANNEL POST ERROR")
         await message.answer(f"❌ Ошибка отправки в канал: <code>{e}</code>")
 
-# ====== ВСПОМОГАТЕЛЬНЫЕ ======
+
+# ====== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ======
 def fmt_sum(n: int) -> str:
     try:
         n = int(n)
     except Exception:
         n = 0
+
     return f"{n:,}".replace(",", " ")
+
 
 def tg_label(u: types.User) -> str:
     return f"@{u.username}" if u.username else u.full_name
 
+
 def clean_str(v) -> str:
     return ("" if v is None else str(v)).strip()
+
 
 def safe_int(v, default=0) -> int:
     try:
         if v is None or isinstance(v, bool):
             return default
+
         if isinstance(v, (int, float)):
             return int(v)
+
         s = str(v).strip().replace(" ", "")
+
         if s == "":
             return default
+
         return int(float(s))
+
     except Exception:
         return default
+
 
 # ====== ЧТЕНИЕ ЗАКАЗА ======
 def build_order_lines(data: dict) -> list[str]:
@@ -192,6 +215,7 @@ def build_order_lines(data: dict) -> list[str]:
             )
 
             qty = safe_int(it.get("qty"), 0)
+
             if qty <= 0:
                 continue
 
@@ -206,6 +230,7 @@ def build_order_lines(data: dict) -> list[str]:
         lines = ["⚠️ Корзина пустая"]
 
     return lines
+
 
 # ====== ЗАКАЗ ИЗ WEBAPP ======
 @dp.message(F.web_app_data)
@@ -251,7 +276,10 @@ async def webapp_data(message: types.Message):
     if comment:
         admin_text += f"\n💬 <b>Комментарий:</b> {comment}"
 
-    await bot.send_message(ADMIN_ID, admin_text)
+    try:
+        await bot.send_message(ADMIN_ID, admin_text)
+    except Exception:
+        logging.exception("ADMIN MESSAGE ERROR")
 
     await message.answer(
         "✅ <b>Ваш заказ принят!</b>\n"
@@ -259,20 +287,38 @@ async def webapp_data(message: types.Message):
         reply_markup=kb_webapp_reply()
     )
 
+
 # ====== ЗАПУСК ======
 async def main():
     try:
-        try:
-            await bot.delete_webhook(drop_pending_updates=True, request_timeout=10)
-            logging.info("Webhook deleted successfully")
-        except Exception as e:
-            logging.warning(f"delete_webhook skipped: {e}")
+        webhook_deleted = False
+
+        for i in range(5):
+            try:
+                await bot.delete_webhook(
+                    drop_pending_updates=True,
+                    request_timeout=60
+                )
+                webhook_deleted = True
+                logging.info("Webhook deleted successfully")
+                break
+
+            except Exception as e:
+                logging.warning(f"delete_webhook retry {i + 1}/5 failed: {e}")
+                await asyncio.sleep(3)
+
+        if not webhook_deleted:
+            logging.warning(
+                "Webhook was not deleted. Polling may not receive /start. "
+                "Open this link manually: https://api.telegram.org/botTOKEN/deleteWebhook?drop_pending_updates=true"
+            )
 
         logging.info("Bot started successfully")
         await dp.start_polling(bot)
 
     finally:
         await bot.session.close()
+
 
 if __name__ == "__main__":
     asyncio.run(main())
