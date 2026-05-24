@@ -7,6 +7,7 @@ import time
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import CommandStart, Command
 from aiogram.client.default import DefaultBotProperties
+from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.types import (
     ReplyKeyboardMarkup,
     KeyboardButton,
@@ -24,56 +25,42 @@ if not BOT_TOKEN:
 BOT_USERNAME = os.getenv("BOT_USERNAME", "arba_istambul_bot").replace("@", "")
 ADMIN_ID = int(os.getenv("ADMIN_ID", "6013591658"))
 CHANNEL_ID = os.getenv("CHANNEL_ID", "@ARBA_ISTAMBUL_RESTAURANT")
-
 WEBAPP_URL = os.getenv(
     "WEBAPP_URL",
     "https://tahirovdd-lang.github.io/arba-istambul-restaurant/?v=1"
 )
 
-bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
+session = AiohttpSession(timeout=90)
+
+bot = Bot(
+    token=BOT_TOKEN,
+    session=session,
+    default=DefaultBotProperties(parse_mode="HTML")
+)
+
 dp = Dispatcher()
 
 _last_start: dict[int, float] = {}
-
 BTN_OPEN_MULTI = "Ochish • Открыть • Open"
-
-
-def allow_start(user_id: int, ttl: float = 2.0) -> bool:
-    now = time.time()
-    prev = _last_start.get(user_id, 0.0)
-    if now - prev < ttl:
-        return False
-    _last_start[user_id] = now
-    return True
 
 
 def kb_webapp_reply() -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(
-        keyboard=[
-            [
-                KeyboardButton(
-                    text=BTN_OPEN_MULTI,
-                    web_app=WebAppInfo(url=WEBAPP_URL),
-                )
-            ]
-        ],
+        keyboard=[[KeyboardButton(text=BTN_OPEN_MULTI, web_app=WebAppInfo(url=WEBAPP_URL))]],
         resize_keyboard=True,
         one_time_keyboard=False,
-        input_field_placeholder="Откройте приложение",
+        input_field_placeholder="Откройте приложение"
     )
 
 
 def kb_channel_deeplink() -> InlineKeyboardMarkup:
-    deeplink = f"https://t.me/{BOT_USERNAME}?startapp=menu"
     return InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    text=BTN_OPEN_MULTI,
-                    url=deeplink,
-                )
-            ]
-        ]
+        inline_keyboard=[[
+            InlineKeyboardButton(
+                text=BTN_OPEN_MULTI,
+                url=f"https://t.me/{BOT_USERNAME}?startapp=menu"
+            )
+        ]]
     )
 
 
@@ -88,36 +75,46 @@ def welcome_text() -> str:
     )
 
 
+def allow_start(user_id: int, ttl: float = 2.0) -> bool:
+    now = time.time()
+    prev = _last_start.get(user_id, 0.0)
+    if now - prev < ttl:
+        return False
+    _last_start[user_id] = now
+    return True
+
+
 @dp.message(CommandStart())
 async def start(message: types.Message):
-    logging.info(f"/start received from user_id={message.from_user.id}")
+    logging.info(f"/start received from {message.from_user.id}")
 
     if not allow_start(message.from_user.id):
         return
 
     await message.answer(
         welcome_text(),
-        reply_markup=kb_webapp_reply(),
+        reply_markup=kb_webapp_reply()
     )
 
 
 @dp.message(Command("startapp"))
 async def startapp(message: types.Message):
-    logging.info(f"/startapp received from user_id={message.from_user.id}")
+    logging.info(f"/startapp received from {message.from_user.id}")
 
     if not allow_start(message.from_user.id):
         return
 
     await message.answer(
         welcome_text(),
-        reply_markup=kb_webapp_reply(),
+        reply_markup=kb_webapp_reply()
     )
 
 
 @dp.message(Command("post_menu"))
 async def post_menu(message: types.Message):
     if message.from_user.id != ADMIN_ID:
-        return await message.answer("⛔️ Нет доступа.")
+        await message.answer("⛔️ Нет доступа.")
+        return
 
     text = (
         "🇷🇺 <b>ARBA ISTAMBUL RESTAURANT</b>\n"
@@ -132,14 +129,14 @@ async def post_menu(message: types.Message):
         sent = await bot.send_message(
             CHANNEL_ID,
             text,
-            reply_markup=kb_channel_deeplink(),
+            reply_markup=kb_channel_deeplink()
         )
 
         try:
             await bot.pin_chat_message(
                 CHANNEL_ID,
                 sent.message_id,
-                disable_notification=True,
+                disable_notification=True
             )
             await message.answer("✅ Пост отправлен в канал и закреплён.")
         except Exception:
@@ -175,9 +172,11 @@ def safe_int(v, default=0) -> int:
             return default
         if isinstance(v, (int, float)):
             return int(v)
+
         s = str(v).strip().replace(" ", "")
-        if s == "":
+        if not s:
             return default
+
         return int(float(s))
     except Exception:
         return default
@@ -201,20 +200,17 @@ def build_order_lines(data: dict) -> list[str]:
             )
 
             qty = safe_int(it.get("qty"), 0)
+            price = safe_int(it.get("price"), 0)
+
             if qty <= 0:
                 continue
-
-            price = safe_int(it.get("price"), 0)
 
             if price > 0:
                 lines.append(f"• {name} × {qty} = {fmt_sum(price * qty)} сум")
             else:
                 lines.append(f"• {name} × {qty}")
 
-    if not lines:
-        lines = ["⚠️ Корзина пустая"]
-
-    return lines
+    return lines if lines else ["⚠️ Корзина пустая"]
 
 
 @dp.message(F.web_app_data)
@@ -268,49 +264,63 @@ async def webapp_data(message: types.Message):
     await message.answer(
         "✅ <b>Ваш заказ принят!</b>\n"
         "🙏 Спасибо, мы скоро свяжемся с вами.",
-        reply_markup=kb_webapp_reply(),
+        reply_markup=kb_webapp_reply()
     )
 
 
 @dp.message()
-async def echo_any_message(message: types.Message):
-    logging.info(
-        f"ANY MESSAGE received: user_id={message.from_user.id}, text={message.text}"
-    )
+async def any_message(message: types.Message):
+    logging.info(f"ANY MESSAGE: {message.text}")
 
     await message.answer(
         "✅ Бот работает.\n"
         "Нажмите кнопку ниже, чтобы открыть приложение.",
-        reply_markup=kb_webapp_reply(),
+        reply_markup=kb_webapp_reply()
     )
+
+
+async def safe_delete_webhook():
+    for i in range(10):
+        try:
+            await bot.delete_webhook(
+                drop_pending_updates=True,
+                request_timeout=90
+            )
+            logging.info("Webhook deleted successfully")
+            return True
+        except Exception as e:
+            logging.warning(f"delete_webhook retry {i + 1}/10 failed: {e}")
+            await asyncio.sleep(5)
+
+    return False
+
+
+async def start_polling_forever():
+    while True:
+        try:
+            logging.info("Starting polling...")
+            await dp.start_polling(
+                bot,
+                allowed_updates=dp.resolve_used_update_types(),
+                polling_timeout=60
+            )
+        except Exception as e:
+            logging.exception(f"Polling crashed: {e}")
+            await asyncio.sleep(10)
 
 
 async def main():
     try:
-        me = await bot.get_me()
-        logging.info(f"BOT CONNECTED: @{me.username} | id={me.id}")
-
         try:
-            webhook = await bot.get_webhook_info(request_timeout=20)
-            logging.info(f"WEBHOOK URL: {webhook.url}")
-            logging.info(f"PENDING UPDATES: {webhook.pending_update_count}")
+            me = await bot.get_me(request_timeout=90)
+            logging.info(f"BOT CONNECTED: @{me.username} | id={me.id}")
         except Exception as e:
-            logging.warning(f"Cannot get webhook info: {e}")
+            logging.warning(f"get_me failed, but bot will continue: {e}")
 
-        for i in range(5):
-            try:
-                await bot.delete_webhook(
-                    drop_pending_updates=True,
-                    request_timeout=60,
-                )
-                logging.info("Webhook deleted successfully")
-                break
-            except Exception as e:
-                logging.warning(f"delete_webhook retry {i + 1}/5 failed: {e}")
-                await asyncio.sleep(3)
+        await safe_delete_webhook()
 
         logging.info("Bot started successfully")
-        await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
+        await start_polling_forever()
 
     finally:
         await bot.session.close()
